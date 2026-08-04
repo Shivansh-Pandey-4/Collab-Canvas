@@ -23,8 +23,46 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  roomCreated Room[]
+  member      RoomMember[]
+  messages    Message[]
+
   @@unique([email])
   @@map("user")
+}
+
+model Room {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
+
+  createdAt DateTime     @default(now())
+  member    RoomMember[]
+  messages  Message[]
+}
+
+model RoomMember {
+  id Int @id @default(autoincrement())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  roomId Int
+  room   Room @relation(fields: [roomId], references: [id])
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  roomId Int
+  room   Room @relation(fields: [roomId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 model Session {
