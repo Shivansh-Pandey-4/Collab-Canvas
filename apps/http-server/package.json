@@ -16,6 +16,7 @@
   "dependencies": {
     "@repo/auth" : "*",
     "@repo/db" : "*",
+    "@repo/validation" : "*",
     "express": "^5.2.1"
   },
   "devDependencies": {
