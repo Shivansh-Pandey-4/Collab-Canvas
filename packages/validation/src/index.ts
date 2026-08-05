@@ -1,5 +1,5 @@
 import zod from "zod";
-import { createRoomSlugSchema } from "./roomSchema.js";
+import { roomSlugSchema } from "./roomSchema.js";
 
-export {createRoomSlugSchema};
+export {roomSlugSchema};
 export default zod;
