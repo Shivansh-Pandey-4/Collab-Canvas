@@ -56,6 +56,30 @@ wss.on("connection", async(socket, request)=>{
 
             }
 
+            if(result.data.type === "chat"){
+                const msg = result.data.payload.msg;
+                const name = socketMapping.get(socket)?.name;
+                const slug = socketMapping.get(socket)?.slug;
+
+                if(!slug || !name){
+                    throw new Error("user not joined any room");
+                }
+
+                return allSockets.get(slug)?.forEach(s => {
+                    if(s !== socket){
+                        s.send(JSON.stringify({
+                            type : "chat",
+                            payload : {
+                                msg : msg,
+                                fromUser : name
+                            }
+                        }))
+                    }
+                })
+
+
+            }
+
 
         } catch (error) {
             return socket.send(JSON.stringify({
