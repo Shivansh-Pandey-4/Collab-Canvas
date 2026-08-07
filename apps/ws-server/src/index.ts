@@ -1,5 +1,6 @@
 import { WebSocketServer } from "ws";
 import authChecker from "./authChecker.js";
+import { clientMessageSchema } from "@repo/validation";
 
 const wss = new WebSocketServer({port : 8080});
 
