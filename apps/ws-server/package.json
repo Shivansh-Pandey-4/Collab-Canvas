@@ -21,6 +21,7 @@
   "dependencies": 
   {
     "@repo/auth" : "*",
+    "@repo/db" : "*",
     "@repo/validation" : "*",
     "ws": "^8.21.2"
   }

@@ -2,6 +2,7 @@ import WebSocket, { WebSocketServer } from "ws";
 import authChecker from "./authChecker.js";
 import { clientMessageSchema } from "@repo/validation";
 import type { IUserInfo } from "./types/allTypes.js";
+import { prisma } from "@repo/db";
 
 const allSockets = new Map<string , Set<WebSocket>>();
 const socketMapping = new Map<WebSocket, IUserInfo>();
@@ -20,7 +21,7 @@ wss.on("connection", async(socket, request)=>{
         msg : "ready"
     }));
 
-    socket.on("message", (data)=>{
+    socket.on("message", async(data)=>{
         try {
 
             const msg = JSON.parse(data.toString());
@@ -77,6 +78,43 @@ wss.on("connection", async(socket, request)=>{
                     }
                 })
 
+
+            }
+
+            if(result.data.type === "leave_room"){
+
+                const userInfo = socketMapping.get(socket);
+
+                if(!userInfo || !userInfo.name || !userInfo.slug){
+                    throw new Error("user not joined any room");
+                }
+
+                const roomExist = await prisma.room.findUnique({
+                    where : {slug : userInfo.slug}
+                })
+
+                if(!roomExist){
+                    throw new Error("invalid room name");
+                }
+
+                const leaveRoom = await prisma.roomMember.delete({
+                    where: {
+                        roomId_userId: {
+                        roomId: roomExist.id,
+                        userId: userInfo.userId
+                        }
+                    }
+                });
+
+                allSockets.get(userInfo.slug)?.delete(socket);
+                socketMapping.delete(socket);
+
+                return socket.send(JSON.stringify({
+                    type : "leave_room",
+                    payload : {
+                        msg : "user leave the room successfully"
+                    }
+                }))
 
             }
 

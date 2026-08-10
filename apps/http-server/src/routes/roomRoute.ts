@@ -210,4 +210,46 @@ router.delete("/leave/:slug", authMiddleware, async(req: Request<{slug ?: string
 })
 
 
+router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
+    const slug = req.params?.slug;
+    const result = roomSlugSchema.safeParse({slug});
+
+    if(!result.success){
+        return res.status(400).json({
+            success : false,
+            msg : "incorrect room name",
+            error : `err: ${result.error.issues[0]?.message}`
+        })
+    }
+
+    try {
+        const slug = result.data.slug;
+
+        const roomExist = await prisma.room.findUnique({
+            where : {slug}
+        })
+
+        if(!roomExist){
+            return res.status(400).json({
+                success : false,
+                msg : "room not found"
+            })
+        }
+
+        return res.json({
+            success : true,
+            msg : "room found successfully",
+            roomExist
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            msg : "failed to get room",
+            error : error instanceof Error ? error.message : "something went wrong"
+        })
+    }
+
+})
+
 export default router;
