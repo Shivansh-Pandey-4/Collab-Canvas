@@ -13,23 +13,23 @@ interface IButton extends React.ComponentProps<"button"> {
 
 export default function Button({ children, className, size = "sm", variant = "primary", disabled, ...props }: IButton) {
 
-    const baseStyle = "ui:rounded-md ui:border";
+    const baseStyle = "rounded-md border";
 
     const sizes = {
-        sm: "ui:px-1",
-        md: "ui:px-2 ui:py-1 ui:text-md",
-        lg: "ui:px-3 ui:py-2 ui:text-lg"
+        sm: "px-1",
+        md: "px-2 py-1 text-md",
+        lg: "px-3 py-2 text-lg"
     }
 
     const variants = {
-        primary: "ui:bg-gray-600 text-white ui:hover:bg-black hover:text-white",
-        secondary: "ui:bg-blue-600 text-white ui:hover:bg-green-600",
-        tertiary: "ui:bg-amber-400 text-black ui:hover:bg-amber-600",
-        danger: "ui:bg-red-500 ui:text-black ui:hover:text-white ui:hover:bg-red-600"
+        primary: "bg-gray-600 text-white hover:bg-black hover:text-white",
+        secondary: "bg-blue-600 text-white hover:bg-green-600",
+        tertiary: "bg-amber-400 text-black hover:bg-amber-600",
+        danger: "bg-red-500 text-black hover:text-white hover:bg-red-600"
     }
 
     return (
-        <button {...props} disabled={disabled} className={clsx(baseStyle, className, sizes[size], variants[variant], disabled ? "ui:opacity-50 ui:cursor-no-drop" : "ui:cursor-pointer")}>
+        <button {...props} disabled={disabled} className={clsx(baseStyle, className, sizes[size], variants[variant], disabled ? "opacity-50 cursor-no-drop" : "cursor-pointer")}>
             {children}
         </button>
     )
