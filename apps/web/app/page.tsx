@@ -1,11 +1,8 @@
-"use client"
-import { useContext } from "react"
-import Header from "../components/Header"
-import { OpenContext } from "../context/OpenContext"
-import Body from "../components/body";
+import Header from "../components/landing-page/Header"
+import Body from "../components/landing-page/body"
+
 
 export default function Home() {
-  const myOpen = useContext(OpenContext);
 
   return (
     <div className="">
@@ -20,8 +17,6 @@ export default function Home() {
           </ul>
         </div>
       } */}
-
-      <h1 className="mt-2">Home Page.</h1>
       <Body />
     </div>
   )
