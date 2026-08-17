@@ -1,11 +1,11 @@
 import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
 import Link from "next/link";
 
-export default function Footer() {
+export default function Contact() {
 
     return (
 
-        <div className="border-t mt-12 border-gray-500 py-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4 mx-auto">
+        <div className="border-t mt-12 border-gray-700 py-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4 mx-auto">
 
             <div className=" col-span-1">
                 <h1 className="text-2xl font-semibold">Stay</h1>
@@ -17,8 +17,12 @@ export default function Footer() {
             <div className=" col-span-1">
                 <h1 className="text-xl font-medium">Quick Links</h1>
                 <ul className="mt-4">
-                    <li className="text-sm">Home</li>
-                    <li className="mt-1 text-sm">Features</li>
+                    <Link href={"#Home"}>
+                        <li className="text-sm">Home</li>
+                    </Link>
+                    <Link href={"#features"}>
+                        <li className="mt-1 text-sm">Features</li>
+                    </Link>
                 </ul>
             </div>
 
@@ -38,10 +42,6 @@ export default function Footer() {
                     <IconBrandLinkedin />
                 </div>
             </div>
-
-            {/* <div className="border-t-2 border-amber-50 mt-8">
-                <p>2026 by Shivansh Pandey. All rights reserved.</p>
-            </section> */}
         </div>
     )
 }
