@@ -1,5 +1,6 @@
 import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
 import Link from "next/link";
+import Input from "@repo/ui/input";
 
 export default function Contact() {
 
@@ -11,7 +12,7 @@ export default function Contact() {
                 <h1 className="text-2xl font-semibold">Stay</h1>
                 <h1 className="text-2xl font-semibold">Connected</h1>
                 <p className="text-gray-400 mt-1">Collaborate with me on exciting projects!</p>
-                <input className="mt-3 border border-gray-500 py-1 rounded-md px-3" type="text" placeholder="Enter your email" />
+                <Input variant="sm" className="mt-3" type="text" placeholder="Enter your email" />
             </div>
 
             <div className=" col-span-1">
