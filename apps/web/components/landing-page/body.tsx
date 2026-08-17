@@ -1,4 +1,5 @@
 import Features from "./Features";
+import Footer from "./Contact";
 import Hero from "./Hero";
 
 export default function Body() {
@@ -15,6 +16,7 @@ export default function Body() {
                 </p>
             </section>
             <Features />
+            <Footer />
         </div>
     )
 }
