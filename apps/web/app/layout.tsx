@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <div className="px-4">
+        <div>
           <Provider >
             {children}
           </Provider>

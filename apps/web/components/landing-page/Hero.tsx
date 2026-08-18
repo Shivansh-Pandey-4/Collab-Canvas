@@ -1,5 +1,6 @@
 "use client"
 import Button from "@repo/ui/button"
+import Link from "next/link"
 
 
 export default function Hero() {
@@ -9,7 +10,9 @@ export default function Hero() {
             <p className="text-4xl md:text-5xl lg:text-7xl  font-semibold">Build faster with<br />Collab Canvas</p>
 
             <div className="mt-8 space-x-5">
-                <Button variant="secondary" size="lg" >Be My Guest</Button>
+                <Link href={"/canvas"}>
+                    <Button variant="secondary" size="lg" >Be My Guest</Button>
+                </Link>
                 <Button variant="primary" size="lg" >Create Account</Button>
             </div>
 
