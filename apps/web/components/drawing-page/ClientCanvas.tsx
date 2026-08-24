@@ -1,11 +1,14 @@
 "use client"
-import { useEffect, useRef } from "react";
-import { MousePointer, Circle, Square, Diamond, MoveRight, Minus, Pencil, TypeOutline, Eraser } from "lucide-react";
 
+import { useEffect, useRef } from "react"
+import ToolBar from "./ToolBar";
 
+export default function ClientCanvas2() {
 
-export default function ClientCanvas() {
     const myCanvas = useRef<HTMLCanvasElement>(null);
+    const initialPoint = useRef({ x: 0, y: 0 });
+    const widthHeight = useRef({ x: 0, y: 0 });
+    const isStart = useRef(false);
 
     useEffect(() => {
         const canvas = myCanvas.current;
@@ -13,38 +16,71 @@ export default function ClientCanvas() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const resizeCanvas = () => {
+        function handleMouseDown(e: MouseEvent) {
+            const value = canvas?.getBoundingClientRect();
+            if (!value) return;
+
+            isStart.current = true;
+
+            const startX = e.clientX - value.left;
+            const startY = e.clientY - value.top;
+
+            initialPoint.current = { x: startX, y: startY };
+            widthHeight.current = { x: 0, y: 0 };
+        }
+
+        function handleMouseUp(event: MouseEvent) {
+            const value = canvas?.getBoundingClientRect();
+            if (!value) return;
+
+            const x = event.clientX - value.left;
+            const y = event.clientY - value.top;
+
+            const width = x - initialPoint.current.x;
+            const height = y - initialPoint.current.y;
+
+            widthHeight.current = { x: width, y: height };
+            drawPicture();
+        }
+
+        function drawPicture() {
+            if (!ctx) return;
+
+            const x = initialPoint.current.x;
+            const y = initialPoint.current.y;
+            const width = widthHeight.current.x;
+            const height = widthHeight.current.y;
+
+            ctx.strokeRect(x, y, width, height);
+        }
+
+        function resizeCanvas() {
+            if (!canvas) return;
+
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        };
+        }
 
         resizeCanvas();
 
         window.addEventListener("resize", resizeCanvas);
 
+        canvas.addEventListener("mousedown", handleMouseDown);
+        canvas.addEventListener("mouseup", handleMouseUp);
+        window.addEventListener("resize", resizeCanvas);
+
         return () => {
+            canvas.removeEventListener("mousedown", handleMouseDown);
+            canvas.removeEventListener("mouseup", handleMouseUp);
             window.removeEventListener("resize", resizeCanvas);
-        };
+        }
 
     }, []);
 
-
     return (
         <>
-            <div className="border rounded-md px-4 py-1.5 max-w-lg fixed w-full top-5 left-1/2 -translate-x-1/2 border-gray-300 shadow-md shadow-gray-200">
-                <ul className="flex gap-x-6 items-center justify-center">
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><MousePointer className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><Square className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><Circle className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><Diamond className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><MoveRight className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><Minus className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><Pencil className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><TypeOutline className="text-gray-700" size={14} /></li>
-                    <li className="p-2 hover:bg-gray-100 rounded-md"><Eraser className="text-gray-700" size={14} /></li>
-                </ul>
-            </div>
-            <canvas ref={myCanvas} className="bg-white" height={200} width={200} id="canvas"></canvas>
+            <ToolBar />
+            <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
         </>
     )
 }

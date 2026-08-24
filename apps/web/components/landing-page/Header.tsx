@@ -10,7 +10,7 @@ export default function Header() {
 
 
     return (
-        <header className="max-w-2xl mx-auto mt-4 border border-zinc-700 py-4 rounded-full w-full sticky top-3 bg-black">
+        <header className="max-w-2xl mx-auto mt-4 border border-zinc-700 py-4 rounded-full w-full sticky top-4 bg-black">
 
             {/* for sm device */}
             <nav className="md:hidden block px-6">
