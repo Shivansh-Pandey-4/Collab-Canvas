@@ -29,10 +29,27 @@ export default function ClientCanvas2() {
             widthHeight.current = { x: 0, y: 0 };
         }
 
+        function handleMouseMove(e: MouseEvent) {
+            const value = canvas?.getBoundingClientRect();
+            if (!value) return;
+            if (!ctx) return;
+            if (!isStart.current) return;
+
+            const x = initialPoint.current.x;
+            const y = initialPoint.current.y;
+
+            const width = e.clientX - value.left;
+            const height = e.clientY - value.top;
+
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.strokeRect(x, y, width - x, height - y);
+        }
+
         function handleMouseUp(event: MouseEvent) {
             const value = canvas?.getBoundingClientRect();
             if (!value) return;
 
+            isStart.current = false;
             const x = event.clientX - value.left;
             const y = event.clientY - value.top;
 
@@ -67,10 +84,12 @@ export default function ClientCanvas2() {
 
         canvas.addEventListener("mousedown", handleMouseDown);
         canvas.addEventListener("mouseup", handleMouseUp);
+        canvas.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("resize", resizeCanvas);
 
         return () => {
             canvas.removeEventListener("mousedown", handleMouseDown);
+            canvas.removeEventListener("mousemove", handleMouseMove);
             canvas.removeEventListener("mouseup", handleMouseUp);
             window.removeEventListener("resize", resizeCanvas);
         }
