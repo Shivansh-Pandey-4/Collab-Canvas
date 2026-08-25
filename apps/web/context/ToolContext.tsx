@@ -1,10 +1,10 @@
-"use state";
+"use client";
 
 import { createContext, useState } from "react";
 
-type ToolItem = "arrow" | "circle" | "rectangle" | "eraser";
+export type ToolItem = "arrow" | "circle" | "square" | "diamond" | "right-arrow" | "line" | "pencil" | "text-type" | "eraser";
 
-interface IToolContext {
+export interface IToolContext {
     selectedItem: ToolItem;
     setSelectedItem: React.Dispatch<React.SetStateAction<ToolItem>>
 }

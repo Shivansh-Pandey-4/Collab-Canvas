@@ -7,11 +7,11 @@ interface IButton extends React.ComponentProps<"button"> {
     children: React.ReactNode;
     className?: string;
     size?: "sm" | "lg" | "md";
-    variant?: "primary" | "secondary" | "tertiary" | "danger";
+    variant?: "primary" | "secondary" | "tertiary" | "danger" | "toolBar";
 }
 
 
-export default function Button({ children, className, size = "sm", variant = "primary", disabled, ...props }: IButton) {
+export default function Button({ children, size = "sm", variant = "primary", className, disabled, ...props }: IButton) {
 
     const baseStyle = "rounded-md border";
 
@@ -25,7 +25,8 @@ export default function Button({ children, className, size = "sm", variant = "pr
         primary: "bg-gray-600 text-white hover:bg-black hover:text-white",
         secondary: "bg-blue-600 text-white hover:bg-green-600",
         tertiary: "bg-amber-400 text-black hover:bg-amber-600",
-        danger: "bg-red-500 text-black hover:text-white hover:bg-red-600"
+        danger: "bg-red-500 text-black hover:text-white hover:bg-red-600",
+        toolBar: "hover:bg-gray-100"
     }
 
     return (
