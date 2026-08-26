@@ -13,7 +13,6 @@ type ISquare = {
     w: number;
     h: number;
 }
-// "arrow" | "circle" | "square" | "diamond" | "right-arrow" | "line" | "pencil" | "text-type" | "eraser"
 
 type ICircle = {
     shape : "circle",
@@ -48,4 +47,12 @@ type ILine = {
     h : number;
 }
 
-export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine;
+type IPencil = {
+    shape : "pencil",
+    points : {
+        x : number;
+        y : number;
+    }[]
+}
+
+export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine | IPencil;

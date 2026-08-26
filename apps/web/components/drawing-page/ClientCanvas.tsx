@@ -10,6 +10,8 @@ export default function ClientCanvas2() {
 
     const myCanvas = useRef<HTMLCanvasElement>(null);
     const initialPoint = useRef({ x: 0, y: 0 });
+    const previousPoint = useRef({ x: 0, y: 0 });
+    const currentPencilIndex = useRef<number>(null);
     const widthHeight = useRef({ x: 0, y: 0 });
     const isStart = useRef(false);
     const allData = useRef<IDrawShapes[]>([]);
@@ -68,6 +70,35 @@ export default function ClientCanvas2() {
 
             }
 
+            if (shape === "pencil") {
+                const { points } = item;
+                if (!points) return;
+                if (points.length < 2) return;
+
+                ctx.beginPath();
+
+                const firstPoint = points[0];
+                if (!firstPoint) return;
+
+                ctx.moveTo(firstPoint.x, firstPoint.y);
+
+                for (let i = 1; i < points.length; i++) {
+                    const point = points[i];
+                    if (!point) continue;
+
+                    ctx.lineTo(
+                        point.x,
+                        point.y
+                    );
+                }
+
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 2;
+                ctx.lineCap = "round";
+
+                ctx.stroke();
+            }
+
         })
 
     }
@@ -99,6 +130,12 @@ export default function ClientCanvas2() {
                 y: startY,
             };
             widthHeight.current = { x: 0, y: 0 };
+            previousPoint.current = { x: startX, y: startY };
+
+            if (selectedTool.current === "pencil") {
+                allData.current.push({ shape: "pencil", points: [{ x: startX, y: startY }] });
+                currentPencilIndex.current = allData.current.length - 1;
+            }
         }
 
         function handleMouseMove(e: MouseEvent) {
@@ -107,6 +144,44 @@ export default function ClientCanvas2() {
             const value = canvas.getBoundingClientRect();
 
             if (!isStart.current) return;
+
+            if (selectedTool.current === "pencil") {
+                const x = e.clientX - value.left;
+                const y = e.clientY - value.top;
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    previousPoint.current.x,
+                    previousPoint.current.y
+                );
+
+                ctx.lineTo(x, y);
+
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 2;
+                ctx.lineCap = "round";
+
+                ctx.stroke();
+
+                const index = currentPencilIndex.current;
+
+                if (index !== null) {
+                    const pencil = allData.current[index];
+
+                    if (pencil?.shape === "pencil") {
+                        pencil.points.push({ x, y });
+                    }
+                }
+
+
+                // Current point becomes the previous point
+                previousPoint.current = {
+                    x,
+                    y,
+                };
+                return;
+            }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawingShapes(ctx, canvas);
@@ -216,6 +291,8 @@ export default function ClientCanvas2() {
                 ctx.closePath();
                 ctx.stroke();
             }
+
+
         }
 
         function handleMouseUp(e: MouseEvent) {
@@ -303,6 +380,10 @@ export default function ClientCanvas2() {
                 allData.current.push(finalShape);
             }
 
+            if (selectedTool.current === "pencil") {
+                currentPencilIndex.current = null;
+            }
+
             drawingShapes(ctx, canvas);
         }
 
@@ -328,18 +409,6 @@ export default function ClientCanvas2() {
         };
     }, []);
 
-
-    // useEffect(() => {
-    //     const canvas = myCanvas.current;
-    //     if (!canvas) return;
-    //     const ctx = canvas.getContext("2d");
-    //     if (!ctx) return;
-
-    //     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    //     drawingShapes(ctx, canvas);
-
-    // }, [allData]);
 
 
     return (
