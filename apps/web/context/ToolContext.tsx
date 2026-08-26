@@ -2,7 +2,7 @@
 
 import { createContext, useState } from "react";
 
-export type ToolItem = "arrow" | "circle" | "square" | "diamond" | "right-arrow" | "line" | "pencil" | "text-type" | "eraser";
+export type ToolItem = "arrow" | "circle" | "triangle" | "square" | "diamond" | "right-arrow" | "line" | "pencil" | "text-type" | "eraser";
 
 export interface IToolContext {
     selectedItem: ToolItem;

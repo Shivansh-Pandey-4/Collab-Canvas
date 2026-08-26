@@ -13,7 +13,7 @@ export default function ToolBar() {
 
 
     return (
-        <div className="border rounded-md lg:px-4 py-1.5 max-w-lg fixed top-5 left-1/2 -translate-x-1/2 border-gray-300 shadow-md shadow-gray-200">
+        <div className="border rounded-md px-2 lg:px-4 py-1.5 max-w-lg fixed top-5 left-1/2 -translate-x-1/2 border-gray-300 shadow-md shadow-gray-200">
 
             <ul className="flex gap-x-4 lg:gap-x-5 items-center justify-center w-md lg:w-full mx-auto">
 

@@ -1,6 +1,6 @@
 
 import { ToolItem } from "../context/ToolContext";
-import { MousePointer, Circle, Square, Diamond, MoveRight, Minus, Pencil, TypeOutline, Eraser, LucideProps} from "lucide-react";
+import { MousePointer, Circle, Square, Diamond, MoveRight, Minus, Pencil, TypeOutline, Eraser, LucideProps, Triangle} from "lucide-react";
 
 interface IToolBarItem {
     id : number;
@@ -26,31 +26,36 @@ export const ToolBarItems: IToolBarItem[] = [
     },
     {
         id : 4,
+        label : "triangle",
+        icon : Triangle
+    },
+    {
+        id : 5,
         label : "diamond",
         icon : Diamond
     },
     {
-        id : 5,
+        id : 6,
         label : "right-arrow",
         icon : MoveRight
     },
     {
-        id : 6,
+        id : 7,
         label : "line",
         icon : Minus
     },
     {
-        id : 7,
+        id : 8,
         label : "pencil",
         icon : Pencil
     },
     {
-        id : 8,
+        id : 9,
         label : "text-type",
         icon : TypeOutline
     },
     {
-        id : 9,
+        id : 10,
         label : "eraser",
         icon : Eraser
     }
