@@ -38,6 +38,36 @@ export default function ClientCanvas2() {
                 ctx.stroke();
             }
 
+            if (shape === "line") {
+                const { x, y, w, h } = item;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(w, h);
+                ctx.stroke();
+            }
+
+            if (shape === "triangle") {
+                const { x, y, w, h } = item;
+
+                const topX = x + w / 2;
+                const topY = y;
+
+                const bottomLeftX = x;
+                const bottomLeftY = y + h;
+
+                const bottomRightX = x + w;
+                const bottomRightY = y + h;
+
+                ctx.beginPath();
+
+                ctx.moveTo(topX, topY);
+                ctx.lineTo(bottomRightX, bottomRightY);
+                ctx.lineTo(bottomLeftX, bottomLeftY);
+                ctx.closePath();
+                ctx.stroke();
+
+            }
+
         })
 
     }
@@ -143,6 +173,49 @@ export default function ClientCanvas2() {
 
                 ctx.stroke();
             }
+
+            if (selectedTool.current === "line") {
+
+                const x = initialPoint.current.x;
+                const y = initialPoint.current.y;
+
+                const width = e.clientX - value.left;
+                const height = e.clientY - value.top;
+
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(width, height);
+                ctx.stroke();
+            }
+
+            if (selectedTool.current === "triangle") {
+                const x = e.clientX - value.left;
+                const y = e.clientY - value.top;
+
+                const width = x - initialPoint.current.x;
+                const height = y - initialPoint.current.y;
+
+                const startX = initialPoint.current.x;
+                const startY = initialPoint.current.y;
+
+                // Three points
+                const topX = startX + width / 2;
+                const topY = startY;
+
+                const bottomLeftX = startX;
+                const bottomLeftY = startY + height;
+
+                const bottomRightX = startX + width;
+                const bottomRightY = startY + height;
+
+                ctx.beginPath();
+
+                ctx.moveTo(topX, topY);
+                ctx.lineTo(bottomRightX, bottomRightY);
+                ctx.lineTo(bottomLeftX, bottomLeftY);
+                ctx.closePath();
+                ctx.stroke();
+            }
         }
 
         function handleMouseUp(e: MouseEvent) {
@@ -195,6 +268,39 @@ export default function ClientCanvas2() {
 
                 allData.current.push(finalShape);
 
+            }
+
+            if (selectedTool.current === "line") {
+
+                const finalShape: IDrawShapes = {
+                    shape: "line",
+                    x: initialPoint.current.x,
+                    y: initialPoint.current.y,
+                    w: x,
+                    h: y
+                }
+
+                allData.current.push(finalShape);
+
+            }
+
+            if (selectedTool.current === "triangle") {
+
+                const width = x - initialPoint.current.x;
+                const height = y - initialPoint.current.y;
+
+                const startX = initialPoint.current.x;
+                const startY = initialPoint.current.y;
+
+                const finalShape: IDrawShapes = {
+                    shape: "triangle",
+                    x: startX,
+                    y: startY,
+                    w: width,
+                    h: height
+                }
+
+                allData.current.push(finalShape);
             }
 
             drawingShapes(ctx, canvas);

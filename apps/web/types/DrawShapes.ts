@@ -30,6 +30,8 @@ type ITriangle = {
     shape : "triangle",
     x : number;
     y : number;
+    w : number;
+    h : number;
 }
 
 type IDiamond = {
@@ -38,4 +40,12 @@ type IDiamond = {
     y : number;
 }
 
-export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle
+type ILine = {
+    shape : "line",
+    x : number;
+    y : number;
+    w : number;
+    h : number;
+}
+
+export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine;
