@@ -115,6 +115,17 @@ export default function ClientCanvas2() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
+        const data = localStorage.getItem("canvas_data");
+        if (data) {
+            try {
+                allData.current = JSON.parse(data);
+            } catch (error) {
+                allData.current = [];
+            }
+        } else {
+            localStorage.setItem("canvas_data", JSON.stringify(allData.current));
+        }
+
         function handleMouseDown(e: MouseEvent) {
             if (!canvas) return;
 
@@ -145,43 +156,7 @@ export default function ClientCanvas2() {
 
             if (!isStart.current) return;
 
-            if (selectedTool.current === "pencil") {
-                const x = e.clientX - value.left;
-                const y = e.clientY - value.top;
 
-                ctx.beginPath();
-
-                ctx.moveTo(
-                    previousPoint.current.x,
-                    previousPoint.current.y
-                );
-
-                ctx.lineTo(x, y);
-
-                ctx.strokeStyle = "black";
-                ctx.lineWidth = 2;
-                ctx.lineCap = "round";
-
-                ctx.stroke();
-
-                const index = currentPencilIndex.current;
-
-                if (index !== null) {
-                    const pencil = allData.current[index];
-
-                    if (pencil?.shape === "pencil") {
-                        pencil.points.push({ x, y });
-                    }
-                }
-
-
-                // Current point becomes the previous point
-                previousPoint.current = {
-                    x,
-                    y,
-                };
-                return;
-            }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawingShapes(ctx, canvas);
@@ -292,6 +267,56 @@ export default function ClientCanvas2() {
                 ctx.stroke();
             }
 
+            if (selectedTool.current === "pencil") {
+                const x = e.clientX - value.left;
+                const y = e.clientY - value.top;
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    previousPoint.current.x,
+                    previousPoint.current.y
+                );
+
+                ctx.lineTo(x, y);
+
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 2;
+                ctx.lineCap = "round";
+
+                ctx.stroke();
+
+                const index = currentPencilIndex.current;
+
+                if (index !== null) {
+                    const pencil = allData.current[index];
+
+                    if (pencil?.shape === "pencil") {
+                        pencil.points.push({ x, y });
+                    }
+                }
+
+
+                // Current point becomes the previous point
+                previousPoint.current = {
+                    x,
+                    y,
+                };
+                return;
+            }
+
+            if (selectedTool.current === "eraser") {
+                const x = initialPoint.current.x;
+                const y = initialPoint.current.y;
+
+                const width = e.clientX - value.left;
+                const height = e.clientY - value.top;
+
+                ctx.strokeRect(x, y, 20, 20);
+                ctx.fillStyle = "white";
+                ctx.fillRect(x, y, 20, 20);
+            }
+
 
         }
 
@@ -384,6 +409,11 @@ export default function ClientCanvas2() {
                 currentPencilIndex.current = null;
             }
 
+            if (selectedTool.current === "eraser") {
+
+            }
+
+            localStorage.setItem("canvas_data", JSON.stringify(allData.current));
             drawingShapes(ctx, canvas);
         }
 
@@ -392,6 +422,7 @@ export default function ClientCanvas2() {
 
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            drawingShapes(ctx, canvas);
         }
 
         resizeCanvas();
@@ -408,7 +439,6 @@ export default function ClientCanvas2() {
             window.removeEventListener("resize", resizeCanvas);
         };
     }, []);
-
 
 
     return (
