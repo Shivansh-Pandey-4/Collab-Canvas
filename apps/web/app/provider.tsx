@@ -3,6 +3,7 @@
 import React from "react";
 import { OpenProvider } from "../context/OpenContext";
 import { ToolProvider } from "../context/ToolContext";
+import { SidebarProvider } from "../context/SidebarContext";
 
 export default function Provider({ children }: { children: React.ReactNode }) {
 
@@ -10,7 +11,9 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         <>
             <OpenProvider>
                 <ToolProvider>
-                    {children}
+                    <SidebarProvider>
+                        {children}
+                    </SidebarProvider>
                 </ToolProvider>
             </OpenProvider>
         </>
