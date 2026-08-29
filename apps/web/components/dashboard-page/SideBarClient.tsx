@@ -63,11 +63,11 @@ export function SidebarItems({ icon, text }: ISidebarItems) {
 
             {
                 !extend && (
-                    <li className="absolute left-full ml-2 bg-gray-700 px-3 rounded-md py-1 z-10 invisible group-hover:visible">
+                    <div className="absolute left-full ml-2 bg-gray-700 px-3 rounded-md py-1 z-10 invisible group-hover:visible">
                         <p>
                             {text === "Light-Mode" ? "Light" : text}
                         </p>
-                    </li>
+                    </div>
                 )
             }
         </li >
