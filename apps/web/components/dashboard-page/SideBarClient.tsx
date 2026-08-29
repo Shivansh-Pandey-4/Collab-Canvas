@@ -17,7 +17,7 @@ export default function SideBarClient() {
 
 
     return (
-        <aside className={`h-screen max-w-3xs shadow-sm shadow-amber-50 bg-neutral-800 ${extend ? " w-full" : "w-22"}`}>
+        <aside className={`h-screen shrink-0 max-w-3xs shadow-sm shadow-amber-50 bg-neutral-800 ${extend ? " w-full" : "w-22"}`}>
             <nav className="h-full border-r pt-6 px-2 flex flex-col">
 
                 <div className={`flex items-center justify-between ${!extend && "justify-center"}`}>
