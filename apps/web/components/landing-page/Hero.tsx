@@ -26,12 +26,12 @@ export default function Hero() {
                 <path d="M14 5v14"></path>
             </svg>
 
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ali absolute right-0 md:right-3.5 lg:right-4 bottom-46 md:bottom-46 lg:bottom-34 h-10 w-10 ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ali absolute right-0 md:right-3.5 lg:right-4 bottom-59 md:bottom-59 lg:bottom-46 xl:bottom-34 h-10 w-10 ">
                 <path d="M0 19h14"></path>
                 <path d="M14 5v14"></path>
             </svg>
 
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ali absolute -left-1.5 md:left-2 lg:left-2 bottom-46 md:bottom-46 lg:bottom-34 h-10 w-10 ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ali absolute -left-1.5 md:left-2 lg:left-2 bottom-59 md:bottom-59 lg:bottom-46 xl:bottom-34 h-10 w-10 ">
                 <path d="M15 19h14"></path>
                 <path d="M14 5v14"></path>
             </svg>
