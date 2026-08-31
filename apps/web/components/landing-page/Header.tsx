@@ -1,7 +1,7 @@
 "use client"
 import Button from "@repo/ui/button";
 import { X, Menu, PenBoxIcon, Sun } from "lucide-react"
-import Link from "next/link";
+import Link from "next/link"
 import { useState } from "react"
 
 
