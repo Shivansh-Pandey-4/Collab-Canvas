@@ -22,7 +22,7 @@ export default function SignupClient() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useRouter();
 
-    async function handleSignup(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    async function handleSignup(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const result = signupSchema.safeParse(inputData);
@@ -44,7 +44,8 @@ export default function SignupClient() {
                     setIsLoading(true);
                 },
                 onSuccess: (ctx) => {
-                    navigate.push("/dashboard");
+                    setInputData({ name: "", email: "", password: "" });
+                    navigate.replace("/dashboard");
                 },
                 onError: (ctx) => {
                     toast.error(ctx.error.message);
@@ -70,8 +71,6 @@ export default function SignupClient() {
             setIsLoading(false);
         }
 
-
-
     }
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) {
@@ -84,7 +83,7 @@ export default function SignupClient() {
 
 
     return (
-        <form className="flex flex-col border border-gray-300 p-5 w-full gap-y-6 rounded-md">
+        <form onSubmit={handleSignup} className="flex flex-col border border-gray-300 p-5 w-full gap-y-6 rounded-md">
             <h1 className="text-center text-3xl">Signup Page</h1>
 
             <div className="flex flex-col gap-y-1">
@@ -100,7 +99,7 @@ export default function SignupClient() {
                 <Input type="password" name="password" value={inputData.password} onChange={handleInputChange} required id="password" variant="sm" placeholder="enter password" />
             </div>
 
-            <Button onClick={handleSignup} size="md" className="text-xl mt-1" variant="secondary">
+            <Button type="submit" size="md" className="text-xl mt-1" variant="secondary">
                 {
                     isLoading ? <span className="flex items-center justify-center py-0.5"><Loader2 className="animate-spin" /></span> : "Signup"
                 }

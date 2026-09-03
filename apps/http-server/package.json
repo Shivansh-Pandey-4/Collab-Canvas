@@ -14,13 +14,15 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@repo/auth" : "*",
-    "@repo/db" : "*",
-    "@repo/validation" : "*",
+    "@repo/auth": "*",
+    "@repo/db": "*",
+    "@repo/validation": "*",
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "typescript": "^7.0.2"
   }

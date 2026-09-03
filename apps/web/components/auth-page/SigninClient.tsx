@@ -18,7 +18,9 @@ export default function SigninClient() {
                 <label htmlFor="password">Password</label>
                 <Input required id="password" variant="sm" placeholder="enter password" />
             </div>
-            <Button size="md" className="text-xl mt-1" variant="secondary">Signin</Button>
+
+            <Button type="button" size="md" className="text-xl mt-1" variant="secondary">Signin</Button>
+
             <div className="mt-2 border-t">
                 <p className="text-center mt-4">Don't have an account? <Link className="text-blue-500 hover:underline font-semibold" href={"/signup"}>Signup</Link></p>
             </div>

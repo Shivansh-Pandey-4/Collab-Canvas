@@ -2,6 +2,7 @@ import express, { type Request, type Response } from "express";
 import { toNodeHandler, auth } from "@repo/auth";
 import chatRouter from "./routes/chatRoute.js";
 import roomRouter from "./routes/roomRoute.js";
+import cors from "cors";
 
 import dotenv from "dotenv";
 
@@ -10,7 +11,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.HTTP_PORT || 4000;
 
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+    // methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  })
+);
+
 app.all('/api/auth/{*any}', toNodeHandler(auth));
+
 
 app.use(express.json());
 
