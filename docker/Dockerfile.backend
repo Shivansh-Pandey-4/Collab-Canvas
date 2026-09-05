@@ -1,0 +1,43 @@
+FROM   node:24-alpine
+
+WORKDIR  /app
+
+COPY package.json   ./
+COPY package-lock.json   ./
+COPY turbo.json    ./
+
+
+COPY apps/http-server/package.json  ./apps/http-server/package.json
+COPY packages/auth/package.json   ./packages/auth/package.json
+COPY packages/db/package.json   ./packages/db/package.json
+COPY packages/validation/package.json   ./packages/validation/package.json
+COPY packages/typescript-config/package.json   ./packages/typescript-config/package.json
+
+
+RUN npm install -g npm@11.16.0
+RUN npm install
+
+COPY apps/http-server            ./apps/http-server
+COPY packages/auth               ./packages/auth
+COPY packages/db                 ./packages/db
+COPY packages/validation         ./packages/validation
+COPY packages/typescript-config   ./packages/typescript-config
+
+
+RUN npm run build:auth
+RUN npm run build:validation
+RUN npm run build:db
+RUN npm run generate:db
+RUN npm run build:backend
+
+EXPOSE 3000
+
+CMD [ "sh", "-c", "npm run migrate:db && npm run start:backend" ]
+
+
+
+
+
+
+
+
