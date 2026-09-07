@@ -1,12 +1,11 @@
-import { auth } from "@repo/auth";
+import { auth, fromNodeHeaders } from "@repo/auth";
 import type { NextFunction, Request, Response } from "express";
 
 export default async function authMiddleware(req: Request, res: Response, next: NextFunction){
 
     try {
         const session = await auth.api.getSession({
-            //@ts-ignore
-            headers : req.headers
+            headers : fromNodeHeaders(req.headers)
         });
 
     if(!session){
