@@ -236,16 +236,10 @@ router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
             })
         }
 
-        const allRoomMembers = await prisma.roomMember.findMany({
-            where : {roomId : roomExist.id},
-            include : {user: true}
-        })
-
         return res.json({
             success : true,
             msg : "room found successfully",
-            roomExist,
-            members : allRoomMembers
+            roomExist
         })
 
     } catch (error) {
@@ -275,16 +269,28 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
             where : {
                 id: userId
             },
-            include : {roomCreated: true, member: true}
+            include : {
+                roomCreated: {
+                    include : {
+                        _count: {
+                             select: {
+                                member: true
+                            }
+                        }
+                    }
+                },
+                member: true
+            }
         });
 
 
-        if(!userId){
+        if(!userInfo){
             return res.status(404).json({
                 success : false,
                 msg : "user not found"
             })
         }
+
 
         return res.json({
             success : true,

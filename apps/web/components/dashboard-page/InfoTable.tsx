@@ -2,10 +2,9 @@ import { Ellipsis } from "lucide-react"
 import type { IUserInfo } from "../../app/dashboard/page"
 
 
-
 export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
 
-    const roomCreated = userInfo.userInfo?.roomCreated
+    const roomCreated = userInfo.userInfo?.roomCreated;
     console.log("inside infotable, ", userInfo);
 
     return (
@@ -26,7 +25,7 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
                             <tr key={item.id} className=" text-center">
                                 <td className="pl-2 py-3">{item.slug}</td>
                                 <td className="pl-2 py-3">Admin</td>
-                                <td className="pl-2 py-3">{userInfo.userInfo?.member.length}</td>
+                                <td className="pl-2 py-3">{item._count.member}</td>
                                 <td className="pl-2 py-3">{new Date(item.createdAt).toLocaleString()}</td>
                                 <td className="pl-2 py-3"><Ellipsis className="cursor-pointer hover:rounded-md hover:bg-amber-700 mx-auto" /></td>
                             </tr>

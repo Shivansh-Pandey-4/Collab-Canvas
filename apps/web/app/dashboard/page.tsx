@@ -15,20 +15,31 @@ export type IUser = {
 }
 
 export type IUserInfo = ({
-    userInfo: {
-
+    userInfo: ({
+        roomCreated: ({
+            _count: {
+                member: number;
+            };
+        } & {
+            id: number;
+            createdAt: Date;
+            slug: string;
+            creatorId: string;
+        })[];
         member: {
             id: number;
             userId: string;
             roomId: number;
         }[];
-        roomCreated: {
-            slug: string;
-            createdAt: Date;
-            id: number;
-            creatorId: string;
-        }[];
-    } & IUser | null
+    } & {
+        id: string;
+        email: string;
+        name: string;
+        emailVerified: boolean;
+        image: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }) | null
 })
 
 
@@ -63,7 +74,6 @@ export default async function Dashboard() {
 
     console.log("session inside dashboard", session)
 
-    console.log(session.user.id)
     const userInfo = await getUserData(session.user.id);
     console.log("userinfo ", userInfo);
 
