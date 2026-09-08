@@ -14,7 +14,7 @@ export default function JoinRoomClient() {
         <>
 
             {
-                isOpen && (<Model>
+                isOpen && (<Model setIsOpen={setIsOpen}>
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl">New Workspace room</h1>
                         <Button onClick={() => setIsOpen(false)} className="px-2 py-0" variant="danger">X</Button>

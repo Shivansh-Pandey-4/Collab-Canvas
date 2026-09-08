@@ -1,5 +1,5 @@
-import { Ellipsis } from "lucide-react"
 import type { IUserInfo } from "../../app/(dashboard)/dashboard/page"
+import EllipsisHover from "./EllipsisHover";
 
 
 export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
@@ -27,7 +27,9 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
                                 <td className="pl-2 py-3">Admin</td>
                                 <td className="pl-2 py-3">{item._count.member}</td>
                                 <td className="pl-2 py-3">{new Date(item.createdAt).toLocaleString()}</td>
-                                <td className="pl-2 py-3"><Ellipsis className="cursor-pointer hover:rounded-md hover:bg-amber-700 mx-auto" /></td>
+                                <td className="pl-2 py-3">
+                                    <EllipsisHover />
+                                </td>
                             </tr>
                         ))}
                     </tbody> : <div>Empty Room</div>
@@ -36,16 +38,3 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
         </div >
     )
 }
-
-{/* <tr>
-                        <td className="pl-2 py-3">Indiana</td>
-                        <td className="pl-2 py-3">Indianapolis</td>
-                    </tr>
-                    <tr>
-                        <td className="pl-2 py-3">Ohio</td>
-                        <td className="pl-2 py-3">Columbus</td>
-                    </tr>
-                    <tr>
-                        <td className="pl-2 py-3">Michigan</td>
-                        <td className="pl-2 py-3">Detroit</td>
-                    </tr> */}
