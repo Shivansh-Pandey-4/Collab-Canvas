@@ -2,18 +2,11 @@
 
 import { useState } from "react";
 import Button from "@repo/ui/button";
-import {
-    ChevronRight,
-    ChevronLeft,
-    LucideProps,
-    LayoutDashboard,
-    UserPen,
-    Sun,
-    LogOut,
-} from "lucide-react";
+import { ChevronRight, ChevronLeft, LucideProps, LayoutDashboard, UserPen, Sun, LogOut } from "lucide-react";
 
 import { useSidebarContext } from "../../context/SidebarContext";
 import type { ISessionData } from "../../types/SessionType";
+import { useRouter } from "next/navigation";
 
 interface ISidebarItems {
     icon: React.ForwardRefExoticComponent<
@@ -25,6 +18,7 @@ interface ISidebarItems {
     onClick: () => void;
 }
 
+
 export default function SideBarClient({
     session,
 }: {
@@ -33,6 +27,8 @@ export default function SideBarClient({
     const { extend, setExtend } = useSidebarContext();
 
     const [activeItem, setActiveItem] = useState("DashBoard");
+    const navigate = useRouter();
+
 
     return (
         <aside
@@ -73,7 +69,10 @@ export default function SideBarClient({
                         icon={UserPen}
                         text="Profile"
                         isActive={activeItem === "profile"}
-                        onClick={() => setActiveItem("profile")}
+                        onClick={() => {
+                            setActiveItem("profile")
+                            navigate.push("/profile");
+                        }}
                     />
 
                     <SidebarItems
@@ -89,7 +88,9 @@ export default function SideBarClient({
                         icon={LogOut}
                         text="Logout"
                         isActive={activeItem === "logout"}
-                        onClick={() => setActiveItem("logout")}
+                        onClick={() => {
+                            setActiveItem("logout");
+                        }}
                     />
                 </ul>
 

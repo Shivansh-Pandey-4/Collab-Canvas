@@ -236,10 +236,16 @@ router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
             })
         }
 
+        const allRoomMembers = await prisma.roomMember.findMany({
+            where : {roomId : roomExist.id},
+            include : {user: true}
+        })
+
         return res.json({
             success : true,
             msg : "room found successfully",
-            roomExist
+            roomExist,
+            members : allRoomMembers
         })
 
     } catch (error) {
@@ -251,5 +257,50 @@ router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
     }
 
 })
+
+
+router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string;}>, res: Response)=>{
+
+    const userId = req.params?.userId;
+
+    if(!userId || !userId.trim()){
+        return res.status(400).json({
+            success: false,
+            msg : "userId not provided"
+        })
+    }
+
+    try {
+        const userInfo = await prisma.user.findUnique({
+            where : {
+                id: userId
+            },
+            include : {roomCreated: true, member: true}
+        });
+
+
+        if(!userId){
+            return res.status(404).json({
+                success : false,
+                msg : "user not found"
+            })
+        }
+
+        return res.json({
+            success : true,
+            msg : "user found successfully",
+            userInfo
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            msg : "failed to get user info",
+            error : error instanceof Error ? error.message : "something went wrong"
+        })
+    }
+})
+
+
 
 export default router;

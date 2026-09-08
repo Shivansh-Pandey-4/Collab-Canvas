@@ -1,3 +1,4 @@
+import type { IUserInfo } from "../../app/dashboard/page";
 import FilterClient from "./FilterClient";
 import InfoTable from "./InfoTable";
 import JoinRoomClient from "./JoinRoomClient";
@@ -5,7 +6,8 @@ import PageCount from "./PageCount";
 
 
 
-export default function MainBar() {
+export default function MainBar({ userInfo }: { userInfo: IUserInfo }) {
+
     return (
         <div className="flex-1 min-w-0 bg-neutral-900 px-5">
             <div className="flex items-center justify-between border-b border-gray-300 py-5">
@@ -17,7 +19,7 @@ export default function MainBar() {
                 <FilterClient />
             </div>
             <div className="mt-3 ">
-                <InfoTable />
+                <InfoTable userInfo={userInfo} />
             </div>
             <div className="mt-3 py-3">
                 <PageCount />

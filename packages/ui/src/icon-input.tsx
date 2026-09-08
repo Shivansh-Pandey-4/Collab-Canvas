@@ -11,9 +11,9 @@ export default function IconInput({ icon, ...props }: IIconInput) {
     const Icon = icon;
 
     return (
-        <div className="relative">
-            <label htmlFor="search" className="absolute top-1/2 -translate-y-1/2 left-2">
-                <Icon />
+        <div className="flex items-center">
+            <label htmlFor="search" className="absolute ml-2">
+                <Icon className="text-gray-500" />
             </label>
             <Input id="search" {...props} className="px-10" />
         </div>

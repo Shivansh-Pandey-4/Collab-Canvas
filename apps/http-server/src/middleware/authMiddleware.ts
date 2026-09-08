@@ -5,8 +5,9 @@ export default async function authMiddleware(req: Request, res: Response, next: 
 
     try {
         const session = await auth.api.getSession({
-            headers : fromNodeHeaders(req.headers)
+            headers : fromNodeHeaders(req.headers),
         });
+
 
     if(!session){
         return res.status(401).json({

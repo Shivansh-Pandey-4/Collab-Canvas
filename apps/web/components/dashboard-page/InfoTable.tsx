@@ -1,7 +1,12 @@
 import { Ellipsis } from "lucide-react"
+import type { IUserInfo } from "../../app/dashboard/page"
 
-export default function InfoTable() {
 
+
+export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
+
+    const roomCreated = userInfo.userInfo?.roomCreated
+    console.log("inside infotable, ", userInfo);
 
     return (
         <div className="w-full overflow-x-auto lg:overflow-x-visible">
@@ -15,8 +20,25 @@ export default function InfoTable() {
                         <th className="border border-gray-300 py-2 ">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                {
+                    roomCreated ? <tbody>
+                        {roomCreated.map((item) => (
+                            <tr key={item.id} className=" text-center">
+                                <td className="pl-2 py-3">{item.slug}</td>
+                                <td className="pl-2 py-3">Admin</td>
+                                <td className="pl-2 py-3">{userInfo.userInfo?.member.length}</td>
+                                <td className="pl-2 py-3">{new Date(item.createdAt).toLocaleString()}</td>
+                                <td className="pl-2 py-3"><Ellipsis className="cursor-pointer hover:rounded-md hover:bg-amber-700 mx-auto" /></td>
+                            </tr>
+                        ))}
+                    </tbody> : <div>Empty Room</div>
+                }
+            </table>
+        </div >
+    )
+}
+
+{/* <tr>
                         <td className="pl-2 py-3">Indiana</td>
                         <td className="pl-2 py-3">Indianapolis</td>
                     </tr>
@@ -27,9 +49,4 @@ export default function InfoTable() {
                     <tr>
                         <td className="pl-2 py-3">Michigan</td>
                         <td className="pl-2 py-3">Detroit</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    )
-}
+                    </tr> */}
