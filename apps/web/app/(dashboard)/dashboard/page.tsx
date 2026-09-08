@@ -1,5 +1,4 @@
-import SideBarClient from "../../components/dashboard-page/SideBarClient";
-import MainBar from "../../components/dashboard-page/MainBar";
+import MainBar from "../../../components/dashboard-page/MainBar";
 import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -78,8 +77,7 @@ export default async function Dashboard() {
     console.log("userinfo ", userInfo);
 
     return (
-        <div className="flex w-full">
-            <SideBarClient session={session} />
+        <div className="h-full">
             <MainBar userInfo={userInfo} />
         </div>
     )

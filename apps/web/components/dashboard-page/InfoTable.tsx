@@ -1,5 +1,5 @@
 import { Ellipsis } from "lucide-react"
-import type { IUserInfo } from "../../app/dashboard/page"
+import type { IUserInfo } from "../../app/(dashboard)/dashboard/page"
 
 
 export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {

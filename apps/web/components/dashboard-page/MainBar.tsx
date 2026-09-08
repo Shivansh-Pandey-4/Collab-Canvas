@@ -1,4 +1,4 @@
-import type { IUserInfo } from "../../app/dashboard/page";
+import type { IUserInfo } from "../../app/(dashboard)/dashboard/page";
 import FilterClient from "./FilterClient";
 import InfoTable from "./InfoTable";
 import JoinRoomClient from "./JoinRoomClient";
@@ -9,7 +9,7 @@ import PageCount from "./PageCount";
 export default function MainBar({ userInfo }: { userInfo: IUserInfo }) {
 
     return (
-        <div className="flex-1 min-w-0 bg-neutral-900 px-5">
+        <div className="h-full min-w-0 bg-neutral-900 px-5">
             <div className="flex items-center justify-between border-b border-gray-300 py-5">
                 <h1>Dashboard</h1>
                 <JoinRoomClient />

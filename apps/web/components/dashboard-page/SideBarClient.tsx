@@ -61,7 +61,10 @@ export default function SideBarClient({
                         icon={LayoutDashboard}
                         text="DashBoard"
                         isActive={activeItem === "DashBoard"}
-                        onClick={() => setActiveItem("DashBoard")}
+                        onClick={() => {
+                            setActiveItem("DashBoard")
+                            navigate.replace("/dashboard");
+                        }}
                     />
 
                     <SidebarItems
@@ -71,7 +74,7 @@ export default function SideBarClient({
                         isActive={activeItem === "profile"}
                         onClick={() => {
                             setActiveItem("profile")
-                            navigate.push("/profile");
+                            navigate.replace("/profile");
                         }}
                     />
 
