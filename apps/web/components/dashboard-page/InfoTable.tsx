@@ -28,7 +28,7 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
                                 <td className="pl-2 py-3">{item._count.member}</td>
                                 <td className="pl-2 py-3">{new Date(item.createdAt).toLocaleString()}</td>
                                 <td className="pl-2 py-3">
-                                    <EllipsisHover />
+                                    <EllipsisHover roomCreatedName={item.slug} />
                                 </td>
                             </tr>
                         ))}

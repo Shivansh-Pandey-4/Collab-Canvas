@@ -110,8 +110,8 @@ export default function SideBarClient({
                             className={`leading-4 ${extend ? "block" : "hidden"
                                 } overflow-hidden transition-all`}
                         >
-                            <h1>{session?.user.name.toLocaleUpperCase()}</h1>
-                            <p className="text-sm text-zinc-400">
+                            <h1 className="capitalize">{session?.user.name}</h1>
+                            <p className="text-sm text-zinc-300">
                                 {session?.user.email}
                             </p>
                         </div>

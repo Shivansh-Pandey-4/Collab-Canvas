@@ -307,6 +307,54 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
     }
 })
 
+router.delete("/:slug", authMiddleware, async(req: Request<{slug ?: string}>, res: Response)=>{
 
+    const slug = req.params?.slug;
+    const result = roomSlugSchema.safeParse({slug});
+    if(!result.success){
+        return res.status(400).json({
+            success : false,
+            msg : "incorrect room name",
+            error : `err: ${result.error.issues[0]?.message}`
+        })
+    }
+
+    try {
+
+        const slug = result.data.slug;
+
+        const roomExist = await prisma.room.findUnique({
+            where : {
+                slug : slug,
+                creatorId : req.user_session.user.id
+            },
+        });
+
+        if(!roomExist){
+            return res.status(400).json({
+                success : false,
+                msg : "only admin can delete room"
+            })
+        }
+
+        const deleteRoom = await prisma.room.delete({
+            where : {id : roomExist.id}
+        })
+
+        return res.json({
+            success : true,
+            msg : "room deleted successfully"
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            msg : "failed to delete room",
+            error : error instanceof Error ? error.message : "something went wrong"
+        })
+    }
+
+
+})
 
 export default router;

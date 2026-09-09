@@ -7,13 +7,7 @@ import { CirclePlus, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-
-
-interface IData {
-    success: boolean;
-    msg: string;
-    error?: string;
-}
+import type { IData } from "../../types/BasicResponseMsg";
 
 
 export default function JoinRoomClient() {
@@ -89,7 +83,7 @@ export default function JoinRoomClient() {
         <>
 
             {
-                isOpen && (<Model clearInputFun={setInputData} setIsOpen={setIsOpen}>
+                isOpen && (<Model setIsOpen={setIsOpen}>
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl">New Workspace room</h1>
 
