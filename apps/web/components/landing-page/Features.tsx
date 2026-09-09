@@ -22,6 +22,7 @@ export default function Features() {
                     <h1 className="text-xl md:text-2xl text-zinc-100">Customised Real-time Multi-cursor</h1>
                     <p className="text-gray-500 mt-0.5 max-w-sm">See your team's ideas come to life within second.</p>
 
+
                 </div>
 
                 <div className="border px-4 rounded-md md:col-span-3">

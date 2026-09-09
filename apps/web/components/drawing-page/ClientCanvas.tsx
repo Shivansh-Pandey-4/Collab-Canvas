@@ -5,8 +5,12 @@ import ToolBar from "./ToolBar";
 import { type IDrawShapes } from "../../types/DrawShapes";
 import useToolBar from "../../hooks/useToolBar";
 
+interface IClientCanvasProps {
+    useLocalStorage?: boolean;
+}
 
-export default function ClientCanvas2() {
+
+export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasProps) {
 
     const myCanvas = useRef<HTMLCanvasElement>(null);
     const initialPoint = useRef({ x: 0, y: 0 });
@@ -99,6 +103,38 @@ export default function ClientCanvas2() {
                 ctx.stroke();
             }
 
+            if (shape === "right-arrow") {
+                const { x: startX, y: startY, w: endX, h: endY } = item;
+                const headLength = 12;
+
+                const angle = Math.atan2(
+                    endY - startY,
+                    endX - startX
+                );
+
+                ctx.beginPath();
+
+                // Main line
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+
+                // Arrow head
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - headLength * Math.cos(angle - Math.PI / 6),
+                    endY - headLength * Math.sin(angle - Math.PI / 6)
+                );
+
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - headLength * Math.cos(angle + Math.PI / 6),
+                    endY - headLength * Math.sin(angle + Math.PI / 6)
+                );
+
+                ctx.stroke();
+
+            }
+
         })
 
     }
@@ -115,15 +151,17 @@ export default function ClientCanvas2() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const data = localStorage.getItem("canvas_data");
-        if (data) {
-            try {
-                allData.current = JSON.parse(data);
-            } catch (error) {
-                allData.current = [];
+        if (useLocalStorage) {
+            const data = localStorage.getItem("canvas_data");
+            if (data) {
+                try {
+                    allData.current = JSON.parse(data);
+                } catch (error) {
+                    allData.current = [];
+                }
+            } else {
+                localStorage.setItem("canvas_data", JSON.stringify(allData.current));
             }
-        } else {
-            localStorage.setItem("canvas_data", JSON.stringify(allData.current));
         }
 
         function handleMouseDown(e: MouseEvent) {
@@ -142,6 +180,7 @@ export default function ClientCanvas2() {
             };
             widthHeight.current = { x: 0, y: 0 };
             previousPoint.current = { x: startX, y: startY };
+
 
             if (selectedTool.current === "pencil") {
                 allData.current.push({ shape: "pencil", points: [{ x: startX, y: startY }] });
@@ -317,6 +356,44 @@ export default function ClientCanvas2() {
                 ctx.fillRect(x, y, 20, 20);
             }
 
+            if (selectedTool.current === "right-arrow") {
+                const endX = e.clientX - value.left;
+                const endY = e.clientY - value.top;
+
+                const startX = initialPoint.current.x;
+                const startY = initialPoint.current.y;
+
+                const headLength = 12;
+
+                const angle = Math.atan2(
+                    endY - startY,
+                    endX - startX
+                );
+
+                ctx.beginPath();
+
+                // Main line
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+
+                // Left side of arrow head
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - headLength * Math.cos(angle - Math.PI / 6),
+                    endY - headLength * Math.sin(angle - Math.PI / 6)
+                );
+
+                // Right side of arrow head
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - headLength * Math.cos(angle + Math.PI / 6),
+                    endY - headLength * Math.sin(angle + Math.PI / 6)
+                );
+
+                ctx.stroke();
+            }
+
+
 
         }
 
@@ -410,10 +487,23 @@ export default function ClientCanvas2() {
             }
 
             if (selectedTool.current === "eraser") {
-
             }
 
-            localStorage.setItem("canvas_data", JSON.stringify(allData.current));
+            if (selectedTool.current === "right-arrow") {
+                const finalShape: IDrawShapes = {
+                    shape: "right-arrow",
+                    x: initialPoint.current.x,
+                    y: initialPoint.current.y,
+                    w: x,
+                    h: y
+                };
+
+                allData.current.push(finalShape);
+            }
+
+            if (useLocalStorage) {
+                localStorage.setItem("canvas_data", JSON.stringify(allData.current));
+            }
             drawingShapes(ctx, canvas);
         }
 

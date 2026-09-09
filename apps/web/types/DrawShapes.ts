@@ -55,4 +55,12 @@ type IPencil = {
     }[]
 }
 
-export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine | IPencil;
+type IRightArrow = {
+    shape : "right-arrow",
+    x : number;
+    y : number;
+    w : number;
+    h : number;
+}
+
+export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine | IPencil | IRightArrow;

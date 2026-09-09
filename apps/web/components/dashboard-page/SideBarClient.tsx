@@ -7,6 +7,8 @@ import { ChevronRight, ChevronLeft, LucideProps, LayoutDashboard, UserPen, Sun, 
 import { useSidebarContext } from "../../context/SidebarContext";
 import type { ISessionData } from "../../types/SessionType";
 import { useRouter } from "next/navigation";
+import { authClient } from "../../lib/auth-client";
+import { toast } from "sonner";
 
 interface ISidebarItems {
     icon: React.ForwardRefExoticComponent<
@@ -28,6 +30,22 @@ export default function SideBarClient({
 
     const [activeItem, setActiveItem] = useState("DashBoard");
     const navigate = useRouter();
+
+
+    async function logout() {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    toast.success("User loggedOut successfully");
+                    navigate.replace("/");
+                },
+                onError: () => {
+                    toast.error("failed to logout");
+                }
+            }
+        })
+
+    }
 
 
     return (
@@ -91,8 +109,9 @@ export default function SideBarClient({
                         icon={LogOut}
                         text="Logout"
                         isActive={activeItem === "logout"}
-                        onClick={() => {
+                        onClick={async () => {
                             setActiveItem("logout");
+                            logout();
                         }}
                     />
                 </ul>
