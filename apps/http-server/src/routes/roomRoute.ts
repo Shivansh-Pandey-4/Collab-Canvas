@@ -226,7 +226,10 @@ router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
         const slug = result.data.slug;
 
         const roomExist = await prisma.room.findUnique({
-            where : {slug}
+            where : {slug},
+            include : {
+                member : true
+            }
         })
 
         if(!roomExist){
