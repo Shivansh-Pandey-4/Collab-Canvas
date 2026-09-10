@@ -33,10 +33,12 @@ type ITriangle = {
     h : number;
 }
 
-type IDiamond = {
-    shape : "diamond",
-    x : number;
-    y : number;
+interface IDiamond {
+    shape: "diamond";
+    x: number;
+    y: number;
+    w: number;
+    h: number;
 }
 
 type ILine = {
@@ -62,5 +64,7 @@ type IRightArrow = {
     w : number;
     h : number;
 }
+
+
 
 export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine | IPencil | IRightArrow;

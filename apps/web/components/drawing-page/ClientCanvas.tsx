@@ -96,8 +96,8 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
                     );
                 }
 
-                ctx.strokeStyle = "black";
-                ctx.lineWidth = 2;
+                // ctx.strokeStyle = "black";
+                // ctx.lineWidth = 2;
                 ctx.lineCap = "round";
 
                 ctx.stroke();
@@ -133,6 +133,42 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
 
                 ctx.stroke();
 
+            }
+
+            if (shape === "diamond") {
+                const { x: startX, y: startY, w: endX, h: endY } = item;
+
+                // const endX = e.clientX - value.left;
+                // const endY = e.clientY - value.top;
+
+                // const startX = initialPoint.current.x;
+                // const startY = initialPoint.current.y;
+
+                const width = endX - startX;
+                const height = endY - startY;
+
+                // Four points of the diamond
+                const topX = startX + width / 2;
+                const topY = startY;
+
+                const rightX = startX + width;
+                const rightY = startY + height / 2;
+
+                const bottomX = startX + width / 2;
+                const bottomY = startY + height;
+
+                const leftX = startX;
+                const leftY = startY + height / 2;
+
+                ctx.beginPath();
+
+                ctx.moveTo(topX, topY);
+                ctx.lineTo(rightX, rightY);
+                ctx.lineTo(bottomX, bottomY);
+                ctx.lineTo(leftX, leftY);
+                ctx.closePath();
+
+                ctx.stroke();
             }
 
         })
@@ -320,7 +356,7 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
                 ctx.lineTo(x, y);
 
                 ctx.strokeStyle = "black";
-                ctx.lineWidth = 2;
+                // ctx.lineWidth = 2;
                 ctx.lineCap = "round";
 
                 ctx.stroke();
@@ -391,8 +427,44 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
                 );
 
                 ctx.stroke();
+                return;
             }
 
+            if (selectedTool.current === "diamond") {
+                const endX = e.clientX - value.left;
+                const endY = e.clientY - value.top;
+
+                const startX = initialPoint.current.x;
+                const startY = initialPoint.current.y;
+
+                const width = endX - startX;
+                const height = endY - startY;
+
+                // Four points of the diamond
+                const topX = startX + width / 2;
+                const topY = startY;
+
+                const rightX = startX + width;
+                const rightY = startY + height / 2;
+
+                const bottomX = startX + width / 2;
+                const bottomY = startY + height;
+
+                const leftX = startX;
+                const leftY = startY + height / 2;
+
+                ctx.beginPath();
+
+                ctx.moveTo(topX, topY);
+                ctx.lineTo(rightX, rightY);
+                ctx.lineTo(bottomX, bottomY);
+                ctx.lineTo(leftX, leftY);
+                ctx.closePath();
+
+                // Outline only
+                ctx.stroke();
+                return;
+            }
 
 
         }
@@ -492,6 +564,18 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
             if (selectedTool.current === "right-arrow") {
                 const finalShape: IDrawShapes = {
                     shape: "right-arrow",
+                    x: initialPoint.current.x,
+                    y: initialPoint.current.y,
+                    w: x,
+                    h: y
+                };
+
+                allData.current.push(finalShape);
+            }
+
+            if (selectedTool.current === "diamond") {
+                const finalShape: IDrawShapes = {
+                    shape: "diamond",
                     x: initialPoint.current.x,
                     y: initialPoint.current.y,
                     w: x,
