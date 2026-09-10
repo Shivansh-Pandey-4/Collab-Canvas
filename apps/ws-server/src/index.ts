@@ -1,6 +1,6 @@
 import WebSocket, { WebSocketServer } from "ws";
 import authChecker from "./authChecker.js";
-import { clientMessageSchema } from "@repo/validation";
+import  { clientMessageSchema } from "@repo/validation";
 import type { IUserInfo } from "./types/allTypes.js";
 import { prisma } from "@repo/db";
 
@@ -25,7 +25,7 @@ wss.on("connection", async(socket, request)=>{
         try {
 
             const msg = JSON.parse(data.toString());
-            const result = clientMessageSchema.safeParse({msg});
+            const result = clientMessageSchema.safeParse(msg);
 
             if(!result.success){
                 const err = result.error.issues[0]?.message;
@@ -89,22 +89,22 @@ wss.on("connection", async(socket, request)=>{
                     throw new Error("user not joined any room");
                 }
 
-                const roomExist = await prisma.room.findUnique({
-                    where : {slug : userInfo.slug}
-                })
+                // const roomExist = await prisma.room.findUnique({
+                //     where : {slug : userInfo.slug}
+                // })
 
-                if(!roomExist){
-                    throw new Error("invalid room name");
-                }
+                // if(!roomExist){
+                //     throw new Error("invalid room name");
+                // }
 
-                const leaveRoom = await prisma.roomMember.delete({
-                    where: {
-                        roomId_userId: {
-                        roomId: roomExist.id,
-                        userId: userInfo.userId
-                        }
-                    }
-                });
+                // const leaveRoom = await prisma.roomMember.delete({
+                //     where: {
+                //         roomId_userId: {
+                //         roomId: roomExist.id,
+                //         userId: userInfo.userId
+                //         }
+                //     }
+                // });
 
                 allSockets.get(userInfo.slug)?.delete(socket);
                 socketMapping.delete(socket);

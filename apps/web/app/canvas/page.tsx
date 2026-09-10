@@ -5,7 +5,7 @@ export default function Canvas() {
 
     return (
         <div>
-            <ClientCanvas />
+            <ClientCanvas roomName="guest" useLocalStorage={true} />
         </div>
     )
 }

@@ -1,16 +1,21 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import ToolBar from "./ToolBar";
 import { type IDrawShapes } from "../../types/DrawShapes";
 import useToolBar from "../../hooks/useToolBar";
+import { clientMessageSchema } from "@repo/validation";
+import { toast } from "sonner";
+import InfoMsg from "../canvas-page/InfoMsg";
+
 
 interface IClientCanvasProps {
     useLocalStorage?: boolean;
+    roomName: string;
 }
 
 
-export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasProps) {
+export default function ClientCanvas({ useLocalStorage = true, roomName = "guest" }: IClientCanvasProps) {
 
     const myCanvas = useRef<HTMLCanvasElement>(null);
     const initialPoint = useRef({ x: 0, y: 0 });
@@ -19,6 +24,7 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
     const widthHeight = useRef({ x: 0, y: 0 });
     const isStart = useRef(false);
     const allData = useRef<IDrawShapes[]>([]);
+    const [settingWebsocket, setSettingWebsocket] = useState(false);
 
     const myToolBar = useToolBar();
     const selectedTool = useRef(myToolBar.selectedItem);
@@ -615,10 +621,59 @@ export default function ClientCanvas({ useLocalStorage = true }: IClientCanvasPr
     }, []);
 
 
+    // websocket connection related useEffect.
+
+    useEffect(() => {
+        if (useLocalStorage) return;
+
+        setSettingWebsocket(true);
+        const ws = new WebSocket("ws://localhost:8080");
+        console.log("from websocket ", ws);
+
+        ws.onmessage = (event) => {
+            console.log("from websocket message", event);
+            const parsedMsg = JSON.parse(event.data);
+
+            if (parsedMsg.msg === "ready") {
+                ws.send(JSON.stringify({
+                    type: "join_room",
+                    payload: {
+                        slug: roomName
+                    }
+                }));
+            }
+
+            if (parsedMsg.type === "joined_room") {
+                toast.success(parsedMsg.payload.msg);
+                setSettingWebsocket(false);
+                return;
+            }
+
+            if (parsedMsg.type === "error") {
+                console.log("error message: ", event);
+            }
+        }
+
+        ws.onerror = (event) => {
+            console.log("error: ", event);
+        }
+
+
+        return () => {
+            ws.close();
+        };
+
+    }, []);
+
+
+
     return (
         <>
             <ToolBar />
             <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
+            {
+                settingWebsocket && <InfoMsg />
+            }
         </>
     )
 }

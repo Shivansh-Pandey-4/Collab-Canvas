@@ -11,12 +11,34 @@ interface IRoomExistData extends IData {
             userId: string;
             roomId: number;
         }[];
+        message: {
+            id: number;
+            userId: string;
+            roomId: number;
+            content: string;
+        }[];
         slug: string;
         id: number;
         creatorId: string;
         createdAt: Date;
     } | null;
 }
+
+type ICanvasMsg = {
+    type: "canvas",
+    payload: {
+        msg: string;
+    }
+}
+
+type IChatMsg = {
+    type: "chat",
+    payload: {
+        msg: string;
+    }
+}
+
+type IContent = ICanvasMsg | IChatMsg;
 
 async function roomExist(roomName: string) {
 
@@ -60,15 +82,15 @@ export default async function DynamicCanvas({ params }: { params: Promise<{ slug
         return redirect("/");
     }
 
-
     const isJoined = data.roomExist?.member.find((item) => item.userId === session.user.id);
     if (!isJoined) {
         return redirect("/");
     }
 
+
     return (
         <div>
-            <ClientCanvas useLocalStorage={false} />
+            <ClientCanvas roomName={slug} useLocalStorage={false} />
         </div>
     )
 }
