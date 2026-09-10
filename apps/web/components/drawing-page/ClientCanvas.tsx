@@ -7,6 +7,7 @@ import useToolBar from "../../hooks/useToolBar";
 import { clientMessageSchema } from "@repo/validation";
 import { toast } from "sonner";
 import InfoMsg from "../canvas-page/InfoMsg";
+import ChatMsg from "../canvas-page/ChatMsg";
 
 
 interface IClientCanvasProps {
@@ -670,6 +671,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "guest
     return (
         <>
             <ToolBar />
+            <ChatMsg />
             <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
             {
                 settingWebsocket && <InfoMsg />
