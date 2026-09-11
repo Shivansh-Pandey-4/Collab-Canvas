@@ -10,15 +10,18 @@ import { toast } from "sonner";
 import type { IData } from "../../types/BasicResponseMsg";
 
 
+
 export default function JoinRoomClient() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [inputData, setInputData] = useState("");
+    const [slug, setSlug] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isJoining, setIsJoining] = useState(false);
     const router = useRouter();
 
 
-    async function createRoom(roomName: String) {
+    async function createRoom(roomName: string) {
 
         setIsLoading(true);
 
@@ -78,6 +81,61 @@ export default function JoinRoomClient() {
     }
 
 
+    async function joinRoom(roomName: string) {
+        setIsJoining(true);
+
+        try {
+            const response = await fetch(`http://localhost:3000/room/join/${roomName}`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "content-type": "application/json"
+                }
+            });
+
+            let data: IData | null = null;
+
+            try {
+                data = await response.json();
+            } catch (error) {
+                data = null;
+            }
+
+            if (!response.ok) {
+                toast.error(data?.error || data?.msg || "failed to join the room");
+                return;
+            }
+
+            if (data) {
+                if (data.success) {
+                    toast.success(data.msg);
+                    setSlug("");
+                    router.push(`/canvas/${roomName}`);
+                    return;
+                } else {
+                    toast.message(data.msg);
+                    return;
+                }
+            }
+
+        } catch (error) {
+            if (error instanceof TypeError) {
+                toast.error(error.message);
+                return;
+            }
+            if (error instanceof Error) {
+                toast.error(error.message);
+                return;
+            }
+
+            toast.error("failed to create room, something went wrong");
+            return;
+        } finally {
+            setIsJoining(false);
+        }
+    }
+
+
 
     return (
         <>
@@ -94,7 +152,7 @@ export default function JoinRoomClient() {
                         <label htmlFor="roomName">Room-Name</label>
                         <Input name="roomName" value={inputData} onChange={(e) => setInputData(e.target.value)} autoFocus id="roomName" type="text" placeholder="ex: creative-space" />
 
-                        <Button onClick={() => createRoom(inputData)} disabled={inputData.trim() === "" ? true : false} type="button" variant="secondary" className="mt-4 mb-2 text-xl" size="md">
+                        <Button onClick={() => createRoom(inputData)} disabled={(inputData.trim() === "" ? true : false) || isLoading} type="button" variant="secondary" className="mt-4 mb-2 text-xl" size="md">
                             {
                                 isLoading ? <span className="flex items-center justify-center py-0.5"><Loader2 className="animate-spin " /></span> : "Confirm"
                             }
@@ -106,8 +164,14 @@ export default function JoinRoomClient() {
 
 
             <div className="flex flex-wrap items-center gap-x-3 justify-end ">
-                <Input placeholder="Join via Room Name" className="text-md" variant="sm" />
-                <Button className="mt-2 sm:mt-0" size="md">Join</Button>
+                <Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="Join via Room Name" className="text-md" variant="sm" />
+
+                <Button disabled={(slug.trim() === "" ? true : false) || isJoining} onClick={(e) => joinRoom(slug)} className="mt-2 sm:mt-0" size="md">
+                    {
+                        isJoining ? <span className="flex items-center justify-center py-0.5"><Loader2 className="animate-spin " /></span> : "Join"
+                    }
+                </Button>
+
                 <Button onClick={() => setIsOpen(true)} size="md" className="ml-4 mt-2 sm:mt-0 flex items-center gap-x-2">
                     <CirclePlus size={15} />
                     Create

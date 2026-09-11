@@ -40,31 +40,47 @@ type IChatMsg = {
 
 type IContent = ICanvasMsg | IChatMsg;
 
+
 async function roomExist(roomName: string) {
 
     try {
-        const response = await fetch(`http://localhost:3000/room/${roomName}`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "content-type": "application-json"
+        const requestHeaders = await headers();
+
+        const response = await fetch(
+            `http://localhost:3000/room/${roomName}`,
+            {
+                method: "GET",
+                headers: {
+                    cookie: requestHeaders.get("cookie") ?? "",
+                },
+                cache: "no-store",
             }
-        });
+        );
+
+        let data: IRoomExistData | null = null;
+
+        try {
+            data = await response.json();
+        } catch (error) {
+            data = null;
+        }
 
         if (!response.ok) {
             return null;
         }
 
-        const data: IRoomExistData = await response.json();
-        if (data.success) {
-            return data;
-        } else {
-            return null;
+        if (data) {
+            if (data.success) {
+                return data;
+            } else {
+                return null;
+            }
         }
     } catch (error) {
         return null;
     }
 }
+
 
 export default async function DynamicCanvas({ params }: { params: Promise<{ slug: string }> }) {
 
@@ -81,6 +97,7 @@ export default async function DynamicCanvas({ params }: { params: Promise<{ slug
     if (!data) {
         return redirect("/");
     }
+
 
     const isJoined = data.roomExist?.member.find((item) => item.userId === session.user.id);
     if (!isJoined) {

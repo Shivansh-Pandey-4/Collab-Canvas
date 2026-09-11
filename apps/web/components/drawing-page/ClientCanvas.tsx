@@ -663,8 +663,6 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             }
 
             if (parsedMsg.type === "chat") {
-                console.log("new chat received: ", parsedMsg);
-
                 setAllMsg(prev => ([...prev, parsedMsg]));
                 return;
             }

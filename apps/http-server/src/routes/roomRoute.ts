@@ -98,13 +98,13 @@ router.post("/join/:slug", authMiddleware, async(req: Request<{slug ?: string}>,
             where : {
                 userId : req.user_session.user.id,
                 roomId : roomExist.id
-            }
+            },
         });
 
         if(userAlreadyMember){
-            return res.status(400).json({
-                success : false,
-                msg : "user already a member of this room"
+            return res.json({
+                success : true,
+                msg : "user already a member of this room",
             })
         }
 
@@ -112,7 +112,7 @@ router.post("/join/:slug", authMiddleware, async(req: Request<{slug ?: string}>,
             data : {
                 userId : req.user_session.user.id,
                 roomId : roomExist.id
-            }
+            },
         })
 
         return res.json({
