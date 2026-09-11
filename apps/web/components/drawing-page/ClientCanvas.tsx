@@ -13,10 +13,20 @@ import ChatMsg from "../canvas-page/ChatMsg";
 interface IClientCanvasProps {
     useLocalStorage?: boolean;
     roomName: string;
+    userName?: string;
 }
 
 
-export default function ClientCanvas({ useLocalStorage = true, roomName = "guest" }: IClientCanvasProps) {
+export interface IAllMsg {
+    type: "chat" | "canvas";
+    payload: {
+        msg: string;
+        fromUser: string;
+    }
+}
+
+
+export default function ClientCanvas({ useLocalStorage = true, roomName = "free", userName = "guest" }: IClientCanvasProps) {
 
     const myCanvas = useRef<HTMLCanvasElement>(null);
     const initialPoint = useRef({ x: 0, y: 0 });
@@ -26,6 +36,9 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "guest
     const isStart = useRef(false);
     const allData = useRef<IDrawShapes[]>([]);
     const [settingWebsocket, setSettingWebsocket] = useState(false);
+    const wsRef = useRef<WebSocket | null>(null);
+    const [allMsg, setAllMsg] = useState<IAllMsg[]>([]);
+
 
     const myToolBar = useToolBar();
     const selectedTool = useRef(myToolBar.selectedItem);
@@ -629,10 +642,9 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "guest
 
         setSettingWebsocket(true);
         const ws = new WebSocket("ws://localhost:8080");
-        console.log("from websocket ", ws);
+        wsRef.current = ws;
 
         ws.onmessage = (event) => {
-            console.log("from websocket message", event);
             const parsedMsg = JSON.parse(event.data);
 
             if (parsedMsg.msg === "ready") {
@@ -650,6 +662,13 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "guest
                 return;
             }
 
+            if (parsedMsg.type === "chat") {
+                console.log("new chat received: ", parsedMsg);
+
+                setAllMsg(prev => ([...prev, parsedMsg]));
+                return;
+            }
+
             if (parsedMsg.type === "error") {
                 console.log("error message: ", event);
             }
@@ -662,6 +681,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "guest
 
         return () => {
             ws.close();
+            wsRef.current = null;
         };
 
     }, []);
@@ -671,7 +691,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "guest
     return (
         <>
             <ToolBar />
-            <ChatMsg />
+            <ChatMsg userName={userName} wsRef={wsRef} allMsg={allMsg} setAllMsg={setAllMsg} />
             <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
             {
                 settingWebsocket && <InfoMsg />

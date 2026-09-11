@@ -101,8 +101,8 @@ export default function EllipsisHover({ roomCreatedName }: { roomCreatedName: st
 
                         <Button onClick={() => (
                             router.push(`/canvas/${roomCreatedName}`)
-                        )} className="w-full px-4 py-1 text-left bg-gray-100 hover:bg-gray-400 text-black hover:text-black rounded-none border-transparent" >
-                            <div className="flex items-center gap-x-3"><PencilIcon size={20} /> <span>Open Canvas</span></div>
+                        )} className="w-full px-4 py-1 text-left bg-gray-100 hover:bg-gray-400  rounded-none border-transparent" >
+                            <div className="flex items-center gap-x-3 text-black"><PencilIcon size={20} /> <span className="text-black">Open Canvas</span></div>
                         </Button>
 
                         {/* <Button className="w-full px-4 py-1 text-left hover:bg-gray-400 text-black rounded-none bg-gray-100 hover:text-black border-transparent" > Edit Room </Button> */}

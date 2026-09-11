@@ -90,7 +90,7 @@ export default async function DynamicCanvas({ params }: { params: Promise<{ slug
 
     return (
         <div>
-            <ClientCanvas roomName={slug} useLocalStorage={false} />
+            <ClientCanvas userName={session.user.name} roomName={slug} useLocalStorage={false} />
         </div>
     )
 }
