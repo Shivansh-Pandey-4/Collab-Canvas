@@ -83,7 +83,7 @@ export default function SigninClient() {
 
 
     return (
-        <form onSubmit={handleSignin} className="flex flex-col border border-gray-300 p-5 w-full gap-y-6 rounded-md">
+        <form onSubmit={handleSignin} className="max-w-sm mx-auto flex flex-col border border-gray-300 p-5 w-full gap-y-6 rounded-md">
 
             <h1 className="text-center text-3xl">Signin Page</h1>
 

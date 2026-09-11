@@ -83,7 +83,7 @@ export default function SignupClient() {
 
 
     return (
-        <form onSubmit={handleSignup} className="flex flex-col border border-gray-300 p-5 w-full gap-y-6 rounded-md">
+        <form onSubmit={handleSignup} className="max-w-sm mx-auto flex flex-col border border-gray-300 p-5 w-full gap-y-4 rounded-md">
             <h1 className="text-center text-3xl">Signup Page</h1>
 
             <div className="flex flex-col gap-y-1">

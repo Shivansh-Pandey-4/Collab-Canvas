@@ -2,10 +2,20 @@ import type { IUserInfo } from "../../app/(dashboard)/dashboard/page"
 import EllipsisHover from "./EllipsisHover";
 
 
-export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
+export default function InfoTable({ userInfo }: { userInfo: IUserInfo | null }) {
 
-    const roomCreated = userInfo.userInfo?.roomCreated;
+    // const roomCreated = userInfo?.userInfo?.roomCreated;
     console.log("inside infotable, ", userInfo);
+    const roomCreated = userInfo?.userInfo?.roomCreated ?? [];
+    const members = userInfo?.userInfo?.member ?? [];
+
+    const createdRoomIds = new Set(
+        userInfo?.userInfo?.roomCreated.map((room) => room.id)
+    );
+
+    const participantRooms = members.filter(
+        (member) => !createdRoomIds.has(member.roomId)
+    );
 
     return (
         <div className="w-full overflow-x-auto lg:overflow-x-visible">
@@ -20,19 +30,36 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo }) {
                     </tr>
                 </thead>
                 {
-                    roomCreated ? <tbody>
+                    roomCreated.length > 0 && <tbody>
                         {roomCreated.map((item) => (
                             <tr key={item.id} className=" text-center">
                                 <td className="pl-2 py-3">{item.slug}</td>
-                                <td className="pl-2 py-3">Admin</td>
+                                <td className="pl-2 py-3"><span className="border px-3 py-1 rounded-lg bg-indigo-500 border-black">Admin </span></td>
                                 <td className="pl-2 py-3">{item._count.member}</td>
                                 <td className="pl-2 py-3">{new Date(item.createdAt).toLocaleString()}</td>
                                 <td className="pl-2 py-3">
-                                    <EllipsisHover roomCreatedName={item.slug} />
+                                    <EllipsisHover admin={true} roomCreatedName={item.slug} />
                                 </td>
                             </tr>
                         ))}
-                    </tbody> : <div>Empty Room</div>
+
+                    </tbody>
+                }
+                {
+                    participantRooms.length > 0 && <tbody>
+                        {participantRooms.map((item) => (
+                            <tr key={item.id} className=" text-center">
+                                <td className="pl-2 py-3">{item.room.slug}</td>
+                                <td className="pl-2 py-3"><span className="border px-3 py-1 rounded-lg bg-orange-200 text-black">Participant</span></td>
+                                <td className="pl-2 py-3">{item.room._count.member}</td>
+                                <td className="pl-2 py-3">{new Date(item.room.createdAt).toLocaleString()}</td>
+                                <td className="pl-2 py-3">
+                                    <EllipsisHover admin={false} roomCreatedName={item.room.slug} />
+                                </td>
+                            </tr>
+                        ))}
+
+                    </tbody>
                 }
             </table>
         </div >

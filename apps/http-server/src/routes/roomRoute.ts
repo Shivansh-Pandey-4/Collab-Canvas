@@ -283,7 +283,15 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
                         }
                     }
                 },
-                member: true
+                member: {
+                    include : {
+                        room : {
+                            include : {
+                                _count : true
+                            }
+                        }
+                    }
+                }
             }
         });
 

@@ -6,7 +6,7 @@ import PageCount from "./PageCount";
 
 
 
-export default function MainBar({ userInfo }: { userInfo: IUserInfo }) {
+export default function MainBar({ userInfo }: { userInfo: IUserInfo | null }) {
 
     return (
         <div className="h-full min-w-0 bg-neutral-900 px-5">

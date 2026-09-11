@@ -25,11 +25,24 @@ export type IUserInfo = ({
             slug: string;
             creatorId: string;
         })[];
-        member: {
+        member: ({
+            room: {
+                _count: {
+                    creator: number;
+                    member: number;
+                    messages: number;
+                };
+            } & {
+                id: number;
+                createdAt: Date;
+                slug: string;
+                creatorId: string;
+            };
+        } & {
             id: number;
             userId: string;
             roomId: number;
-        }[];
+        })[];
     } & {
         id: string;
         email: string;
@@ -52,7 +65,11 @@ async function getUserData(userId: string) {
             },
         });
 
-        const data = await response.json();
+        if (!response.ok) {
+            return null;
+        }
+
+        const data: IUserInfo = await response.json();
         return data;
 
     } catch (error) {

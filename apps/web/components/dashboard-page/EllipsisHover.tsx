@@ -1,6 +1,6 @@
 "use client"
 
-import { Ellipsis, Loader2 } from "lucide-react"
+import { Ellipsis, Loader2, DoorOpen } from "lucide-react"
 import { useState, useEffect, useRef } from "react";
 import Button from "@repo/ui/button";
 import type { IData } from "../../types/BasicResponseMsg";
@@ -10,7 +10,7 @@ import { Trash, PencilIcon } from "lucide-react";
 
 
 
-export default function EllipsisHover({ roomCreatedName }: { roomCreatedName: string }) {
+export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedName: string; admin: boolean; }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -107,11 +107,32 @@ export default function EllipsisHover({ roomCreatedName }: { roomCreatedName: st
 
                         {/* <Button className="w-full px-4 py-1 text-left hover:bg-gray-400 text-black rounded-none bg-gray-100 hover:text-black border-transparent" > Edit Room </Button> */}
 
-                        <Button onClick={() => deleteRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
-                            {
-                                isDeleting ? <div className="flex items-center justify-center gap-x-3"><Loader2 className="animate-spin" /> <span>Deleting..</span> </div> : <div className="flex items-center gap-x-3"><Trash size={20} /> <span>Delete</span></div>
-                            }
-                        </Button>
+                        {
+                            admin ? (
+                                <Button onClick={() => deleteRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
+                                    {
+                                        isDeleting ?
+                                            <div className="flex items-center justify-center gap-x-3"><Loader2 className="animate-spin" /> <span>Deleting..</span>
+                                            </div> :
+                                            <div className="flex items-center gap-x-3"><Trash size={20} /> <span>Delete</span>
+                                            </div>
+                                    }
+                                </Button>
+                            ) :
+                                (
+                                    <Button onClick={() => deleteRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
+                                        {
+                                            isDeleting ?
+                                                <div className="flex items-center justify-center gap-x-3"><Loader2 className="animate-spin" /> <span>Leaving..</span>
+                                                </div> :
+                                                <div className="flex items-center gap-x-3"><DoorOpen size={20} /> <span>Leave Room</span>
+                                                </div>
+                                        }
+                                    </Button>
+                                )
+                        }
+
+
                     </div>)
             }
 
