@@ -14,6 +14,7 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
 
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isLeaving, setIsLeaving] = useState(false);
     const router = useRouter();
 
     const popupRef = useRef<HTMLDivElement>(null);
@@ -80,10 +81,63 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
                 return;
             }
 
-            toast.error("failed to create room, something went wrong");
+            toast.error("failed to delete the room, something went wrong");
             return;
         } finally {
             setIsDeleting(false);
+            setIsOpen(false);
+        }
+    }
+
+    async function leaveRoom(roomName: string) {
+        setIsDeleting(true);
+
+        try {
+            const response = await fetch(`http://localhost:3000/room/leave/${roomName}`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "content-type": "application/json"
+                }
+            });
+
+            let data: IData | null = null;
+            try {
+                data = await response.json();
+            } catch (error) {
+                data = null;
+            }
+
+            if (!response.ok) {
+                toast.error(data?.error || data?.msg || "failed to leave the room")
+                return;
+            }
+
+            if (data) {
+                if (data.success) {
+                    toast.success(data.msg);
+                    router.refresh();
+                    return;
+                } else {
+                    toast.error(data.msg);
+                    return;
+                }
+            }
+
+        } catch (error) {
+            if (error instanceof TypeError) {
+                toast.error(error.message);
+                return;
+            }
+            if (error instanceof Error) {
+                toast.error(error.message);
+                return;
+            }
+
+            toast.error("failed to leave the room, something went wrong");
+            return;
+        } finally {
+            setIsLeaving(false);
             setIsOpen(false);
         }
     }
@@ -99,17 +153,22 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
 
                         <h1 className="text-black py-2">Room Actions</h1>
 
-                        <Button onClick={() => (
-                            router.push(`/canvas/${roomCreatedName}`)
-                        )} className="w-full px-4 py-1 text-left bg-gray-100 hover:bg-gray-400  rounded-none border-transparent" >
-                            <div className="flex items-center gap-x-3 text-black"><PencilIcon size={20} /> <span className="text-black">Open Canvas</span></div>
+                        <Button disabled={isDeleting || isLeaving}
+                            onClick={() => {
+                                setIsOpen(false);
+                                router.push(`/canvas/${roomCreatedName}`);
+                            }}
+                            className="w-full px-4 py-1 text-left bg-gray-100 hover:bg-gray-400  rounded-none border-transparent" >
+                            <div className="flex items-center gap-x-3 text-black"><PencilIcon size={20} />
+                                <span className="text-black">Open Canvas</span>
+                            </div>
                         </Button>
 
                         {/* <Button className="w-full px-4 py-1 text-left hover:bg-gray-400 text-black rounded-none bg-gray-100 hover:text-black border-transparent" > Edit Room </Button> */}
 
                         {
                             admin ? (
-                                <Button onClick={() => deleteRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
+                                <Button disabled={isDeleting || isLeaving} onClick={() => deleteRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
                                     {
                                         isDeleting ?
                                             <div className="flex items-center justify-center gap-x-3"><Loader2 className="animate-spin" /> <span>Deleting..</span>
@@ -120,9 +179,9 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
                                 </Button>
                             ) :
                                 (
-                                    <Button onClick={() => deleteRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
+                                    <Button disabled={isDeleting || isLeaving} onClick={() => leaveRoom(roomCreatedName)} variant="danger" className="w-full px-4 py-1 text-left text-red-black hover:bg-red-800 rounded-none border-transparent" >
                                         {
-                                            isDeleting ?
+                                            isLeaving ?
                                                 <div className="flex items-center justify-center gap-x-3"><Loader2 className="animate-spin" /> <span>Leaving..</span>
                                                 </div> :
                                                 <div className="flex items-center gap-x-3"><DoorOpen size={20} /> <span>Leave Room</span>
@@ -136,6 +195,6 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
                     </div>)
             }
 
-        </div>
+        </div >
     )
 }

@@ -180,19 +180,6 @@ router.delete("/leave/:slug", authMiddleware, async(req: Request<{slug ?: string
             }
         })
 
-        const emptyRoom = await prisma.roomMember.count({
-            where : {
-                roomId : roomExist.id
-            }
-        })
-
-        if(emptyRoom === 0){
-            await prisma.room.delete({
-                where : {
-                    id : roomExist.id
-                }
-            })
-        }
 
         return res.json({
             success : true,
