@@ -1,4 +1,6 @@
 import zod from "zod";
+import { drawShapeSchema } from "./drawingShapeSchema.js";
+
 
 const joinRoomSchema = zod.object({
     type : zod.literal("join_room"),
@@ -17,7 +19,7 @@ const chatSchema = zod.object({
 const canvasDrawingSchema = zod.object({
     type : zod.literal("canvas_drawing"),
     payload : zod.object({
-        msg : zod.string().trim()
+        msg : drawShapeSchema
     })
 })
 

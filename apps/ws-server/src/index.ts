@@ -110,8 +110,6 @@ wss.on("connection", async(socket, request)=>{
                 const name = socketMapping.get(socket)?.name;
                 const slug = socketMapping.get(socket)?.slug;
 
-                console.log("received in backend from mouse_movement: ", result.data);
-
                 if(!name || !slug){
                     throw new Error("user not joined any room");
                 }
