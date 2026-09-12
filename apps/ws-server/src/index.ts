@@ -91,13 +91,14 @@ wss.on("connection", async(socket, request)=>{
                     throw new Error("user not joined any room");
                 }
 
+                console.log("value getting in canvas_drawing type: ", result.data);
+
                 return allSockets.get(slug)?.forEach((s) => {
                     if(s !== socket){
                          s.send(JSON.stringify({
                             type : "canvas_drawing",
                             payload : {
                                 msg : drawing,
-                                fromUser: name
                             }
                          }))
                     }

@@ -61,6 +61,17 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     const selectedTool = useRef(myToolBar.selectedItem);
 
 
+    function sendDrawingToSocket(value: IDrawShapes) {
+        console.log("what shape it is : ", value);
+        wsRef.current?.send(JSON.stringify({
+            type: "canvas_drawing",
+            payload: {
+                msg: value
+            }
+        }));
+    }
+
+
     function drawingShapes(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement | null) {
         if (!ctx) return;
         if (!canvas) return;
@@ -291,7 +302,6 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                 // ctx.lineJoin = "bevel";
                 ctx.fillStyle = "rgba(0, 255, 0, 0.1)"
                 ctx.fillRect(initialPoint.current.x, initialPoint.current.y, width, height);
-
                 // ctx.strokeStyle = "green";
                 // ctx.strokeRect(
                 //     initialPoint.current.x,
@@ -533,6 +543,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     h: height,
                 };
 
+                sendDrawingToSocket(finalShape);
                 allData.current.push(finalShape);
 
             }
@@ -559,7 +570,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     startAngle: 0,
                     endAngle: Math.PI * 2
                 }
-
+                sendDrawingToSocket(finalShape);
                 allData.current.push(finalShape);
 
             }
@@ -573,7 +584,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     w: x,
                     h: y
                 }
-
+                sendDrawingToSocket(finalShape);
                 allData.current.push(finalShape);
 
             }
@@ -593,11 +604,24 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     w: width,
                     h: height
                 }
-
+                sendDrawingToSocket(finalShape);
                 allData.current.push(finalShape);
             }
 
             if (selectedTool.current === "pencil") {
+                const index = currentPencilIndex.current;
+
+                if (index !== null) {
+                    const pencil = allData.current[index];
+
+                    if (
+                        pencil?.shape === "pencil" &&
+                        pencil.points.length > 1
+                    ) {
+                        sendDrawingToSocket(pencil);
+                    }
+                }
+
                 currentPencilIndex.current = null;
             }
 
@@ -612,7 +636,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     w: x,
                     h: y
                 };
-
+                sendDrawingToSocket(finalShape);
                 allData.current.push(finalShape);
             }
 
@@ -624,7 +648,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     w: x,
                     h: y
                 };
-
+                sendDrawingToSocket(finalShape);
                 allData.current.push(finalShape);
             }
 
@@ -691,7 +715,17 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             }
 
             if (parsedMsg.type === "canvas_drawing") {
+                const drawing = parsedMsg.payload.msg;
 
+                const canvas = myCanvas.current;
+                if (!canvas) return;
+
+                const ctx = canvas.getContext("2d");
+                if (!ctx) return;
+
+                allData.current.push(drawing);
+                drawingShapes(ctx, canvas);
+                return;
             }
 
             if (parsedMsg.type === "mouse_movement") {
