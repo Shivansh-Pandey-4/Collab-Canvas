@@ -14,10 +14,27 @@ const chatSchema = zod.object({
     })
 });
 
+const canvasDrawingSchema = zod.object({
+    type : zod.literal("canvas_drawing"),
+    payload : zod.object({
+        msg : zod.string().trim()
+    })
+})
+
+const mouseMovementSchema = zod.object({
+    type : zod.literal("mouse_movement"),
+    payload : zod.object({
+        msg : zod.object({
+            x : zod.number(),
+            y : zod.number()
+        })
+    })
+})
+
 const leaveRoomSchema = zod.object({
     type : zod.literal("leave_room")
 })
 
-const clientMessageSchema = zod.discriminatedUnion("type", [joinRoomSchema, chatSchema, leaveRoomSchema]);
+const clientMessageSchema = zod.discriminatedUnion("type", [joinRoomSchema, chatSchema, leaveRoomSchema, canvasDrawingSchema, mouseMovementSchema]);
 
 export default clientMessageSchema;

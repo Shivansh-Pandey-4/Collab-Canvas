@@ -81,6 +81,56 @@ wss.on("connection", async(socket, request)=>{
 
             }
 
+
+            if(result.data.type === "canvas_drawing"){
+                const drawing = result.data.payload.msg;
+                const name = socketMapping.get(socket)?.name;
+                const slug = socketMapping.get(socket)?.slug;
+
+                if(!slug || !name){
+                    throw new Error("user not joined any room");
+                }
+
+                return allSockets.get(slug)?.forEach((s) => {
+                    if(s !== socket){
+                         s.send(JSON.stringify({
+                            type : "canvas_drawing",
+                            payload : {
+                                msg : drawing,
+                                fromUser: name
+                            }
+                         }))
+                    }
+                })
+                
+            }
+
+            if(result.data.type === "mouse_movement"){
+                const msg = result.data.payload.msg;
+                const name = socketMapping.get(socket)?.name;
+                const slug = socketMapping.get(socket)?.slug;
+
+                console.log("received in backend from mouse_movement: ", result.data);
+
+                if(!name || !slug){
+                    throw new Error("user not joined any room");
+                }
+
+                return allSockets.get(slug)?.forEach(s => {
+                     if(s !== socket){
+                          s.send(JSON.stringify({
+                            type : "mouse_movement",
+                                payload : {
+                                    msg,
+                                    fromUser: name
+                                }
+                          }))
+                     }
+                })
+
+            }
+
+
             if(result.data.type === "leave_room"){
 
                 const userInfo = socketMapping.get(socket);

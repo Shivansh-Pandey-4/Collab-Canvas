@@ -8,6 +8,7 @@ import { clientMessageSchema } from "@repo/validation";
 import { toast } from "sonner";
 import InfoMsg from "../canvas-page/InfoMsg";
 import ChatMsg from "../canvas-page/ChatMsg";
+import { Pointer } from "lucide-react";
 
 
 interface IClientCanvasProps {
@@ -18,13 +19,28 @@ interface IClientCanvasProps {
 
 
 export interface IAllMsg {
-    type: "chat" | "canvas";
+    type: "chat";
     payload: {
         msg: string;
         fromUser: string;
     }
 }
 
+export interface IAllWsDrawing {
+    type: "canvas_drawing",
+    payload: {
+        msg: string;
+        fromUser: string;
+    }
+}
+
+export interface IMouseTrack {
+    username: string;
+    msg: {
+        x: number;
+        y: number;
+    }
+}
 
 export default function ClientCanvas({ useLocalStorage = true, roomName = "free", userName = "guest" }: IClientCanvasProps) {
 
@@ -38,6 +54,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     const [settingWebsocket, setSettingWebsocket] = useState(false);
     const wsRef = useRef<WebSocket | null>(null);
     const [allMsg, setAllMsg] = useState<IAllMsg[]>([]);
+    const [mouseTrack, setMouseTrack] = useState<IMouseTrack[] | []>([]);
 
 
     const myToolBar = useToolBar();
@@ -249,9 +266,15 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             if (!ctx) return;
             const value = canvas.getBoundingClientRect();
 
+
+            wsRef.current?.send(JSON.stringify({
+                type: "mouse_movement",
+                payload: {
+                    msg: { x: e.clientX, y: e.clientY }
+                }
+            }))
+
             if (!isStart.current) return;
-
-
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawingShapes(ctx, canvas);
@@ -667,6 +690,33 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                 return;
             }
 
+            if (parsedMsg.type === "canvas_drawing") {
+
+            }
+
+            if (parsedMsg.type === "mouse_movement") {
+                const username = parsedMsg.payload.fromUser;
+                const msg = parsedMsg.payload.msg;
+
+                setMouseTrack(prev => {
+
+                    const userExist = prev.find(user => user.username === username);
+
+                    if (userExist) {
+                        return prev.map(item => {
+                            if (item.username === username) {
+                                return { username: item.username, msg }
+                            } else {
+                                return item;
+                            }
+                        })
+                    } else {
+                        return [...prev, { username, msg }]
+                    }
+                })
+                return;
+            }
+
             if (parsedMsg.type === "error") {
                 console.log("error message: ", event);
             }
@@ -687,10 +737,62 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
 
 
     return (
+        // <>
+        //     <ToolBar />
+        //     <ChatMsg userName={userName} wsRef={wsRef} allMsg={allMsg} setAllMsg={setAllMsg} />
+        //     <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
+        //     {
+        //         settingWebsocket && <InfoMsg />
+        //     }
+        //     {
+        //         mouseTrack.map(user => (
+        //             <div className={`absolute top-${user.msg.x} left-${user.msg.y} `}>
+        //                 <span>{user.username}</span>
+        //                 <Pointer />
+        //             </div>
+        //         ))
+        //     }
+        // </>
         <>
-            <ToolBar />
-            <ChatMsg userName={userName} wsRef={wsRef} allMsg={allMsg} setAllMsg={setAllMsg} />
-            <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
+
+            <ChatMsg
+                userName={userName}
+                wsRef={wsRef}
+                allMsg={allMsg}
+                setAllMsg={setAllMsg}
+            />
+
+            <div className="relative">
+                <ToolBar />
+                <canvas
+                    ref={myCanvas}
+                    height={600}
+                    width={1300}
+                    className="bg-white"
+                />
+
+
+                {
+                    mouseTrack.map(user => (
+                        <div
+                            key={user.username}
+                            className="fixed flex flex-col pointer-events-none z-50"
+                            style={{
+                                left: user.msg.x,
+                                top: user.msg.y
+                            }}
+                        >
+                            <Pointer className="text-black" />
+
+                            <span className="absolute left-4 top-full bg-black text-white px-2 py-1 rounded">
+                                {user.username}
+                            </span>
+
+                        </div>
+                    ))
+                }
+            </div>
+
             {
                 settingWebsocket && <InfoMsg />
             }
