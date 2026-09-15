@@ -42,6 +42,10 @@ export interface IMouseTrack {
     }
 }
 
+export interface ITyping {
+    fromUser: string;
+}
+
 export default function ClientCanvas({ useLocalStorage = true, roomName = "free", userName = "guest" }: IClientCanvasProps) {
 
     const myCanvas = useRef<HTMLCanvasElement>(null);
@@ -55,6 +59,8 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     const wsRef = useRef<WebSocket | null>(null);
     const [allMsg, setAllMsg] = useState<IAllMsg[]>([]);
     const [mouseTrack, setMouseTrack] = useState<IMouseTrack[] | []>([]);
+    const [showTyping, setShowTyping] = useState<ITyping | null>(null);
+    const timerRef = useRef<NodeJS.Timeout>(null);
 
 
     const myToolBar = useToolBar();
@@ -751,6 +757,21 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                 return;
             }
 
+            if (parsedMsg.type === "user_typing") {
+                const userName = parsedMsg.payload.fromUser;
+                setShowTyping({ fromUser: userName });
+
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                }
+
+                timerRef.current = setTimeout(() => {
+                    setShowTyping(null);
+                }, 1000);
+
+                return;
+            }
+
             if (parsedMsg.type === "error") {
                 console.log("error message: ", event);
             }
@@ -779,6 +800,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     wsRef={wsRef}
                     allMsg={allMsg}
                     setAllMsg={setAllMsg}
+                    showTyping={showTyping}
                 />
             }
 

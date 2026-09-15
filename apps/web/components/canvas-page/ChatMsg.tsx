@@ -5,7 +5,7 @@ import Button from "@repo/ui/button";
 import Input from "@repo/ui/input";
 import { MessageSquareMore, X, SendHorizonal } from "lucide-react"
 import React, { useState, useRef, useEffect } from "react";
-import { IAllMsg } from "../drawing-page/ClientCanvas";
+import { IAllMsg, ITyping } from "../drawing-page/ClientCanvas";
 import { toast } from "sonner";
 
 interface IChatMsgProps {
@@ -13,18 +13,19 @@ interface IChatMsgProps {
     allMsg: IAllMsg[];
     setAllMsg: React.Dispatch<React.SetStateAction<IAllMsg[]>>;
     userName: string;
+    showTyping: ITyping | null;
 }
 
 
 export default function ChatMsg(props: IChatMsgProps) {
 
-    const { allMsg, setAllMsg, wsRef, userName } = props;
+    const { allMsg, setAllMsg, wsRef, userName, showTyping } = props;
     const [showPop, setShowPop] = useState(false);
 
     return (
         <>
             {
-                showPop && <ChatPop userName={userName} allMsg={allMsg} setAllMsg={setAllMsg} wsRef={wsRef} />
+                showPop && <ChatPop showTyping={showTyping} userName={userName} allMsg={allMsg} setAllMsg={setAllMsg} wsRef={wsRef} />
             }
 
             <div onClick={() => setShowPop(prev => !prev)} className="fixed right-0 bottom-0  mr-5 mb-5 z-50 w-13 h-13 rounded-full bg-black flex items-center justify-center hover:bg-red-600 cursor-pointer">
@@ -40,7 +41,7 @@ export default function ChatMsg(props: IChatMsgProps) {
 
 export function ChatPop(props: IChatMsgProps) {
 
-    const { allMsg, setAllMsg, wsRef, userName } = props;
+    const { allMsg, setAllMsg, wsRef, userName, showTyping } = props;
     const [inputData, setInputData] = useState("");
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -81,7 +82,7 @@ export function ChatPop(props: IChatMsgProps) {
             scrollChat();
         }
 
-    }, [allMsg]);
+    }, [allMsg, showTyping]);
 
 
     return (
@@ -90,6 +91,7 @@ export function ChatPop(props: IChatMsgProps) {
                 <h1 className="font-semibold">Live Chat</h1>
                 {/* <h1>offline</h1> */}
             </div>
+
             <div className="flex-1 p-3 overflow-y-auto space-y-3">
                 {
                     allMsg.length === 0 && (<div className="h-full flex items-center justify-center">
@@ -105,11 +107,19 @@ export function ChatPop(props: IChatMsgProps) {
                                     {isMyMessage ?
                                         (<p className="text-xs font-semibold text-green-200 mb-1"> {"you"} </p>) : <p className="text-xs font-semibold text-green-100 mb-1"> {item.payload.fromUser} </p>} <p className="text-sm wrap-break-word"> {item.payload.msg} </p>
                                 </div>
-                                <div ref={scrollRef}></div>
                             </div>
                         );
-                    })}
+                    })
+                }
+                <div ref={scrollRef}></div>
             </div>
+
+            {
+                showTyping && <div className={`max-w-[50%] m-1 px-3 py-2 rounded-2xl bg-red-600 text-zinc-100 rounded-br-sm`}>
+                    <span className="font-semibold text-white">{showTyping.fromUser} </span> typing...
+                </div>
+            }
+
             <form onSubmit={(e) => handleSendMsg(e)} className="flex gap-x-2 py-3 px-3 bg-neutral-600 rounded-b-2xl">
 
                 <Input value={inputData} onChange={(e) => {
@@ -122,6 +132,6 @@ export function ChatPop(props: IChatMsgProps) {
                     <SendHorizonal />
                 </Button>
             </form>
-        </div>
+        </div >
     )
 }
