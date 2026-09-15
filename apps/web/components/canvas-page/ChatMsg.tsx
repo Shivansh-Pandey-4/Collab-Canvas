@@ -14,18 +14,19 @@ interface IChatMsgProps {
     setAllMsg: React.Dispatch<React.SetStateAction<IAllMsg[]>>;
     userName: string;
     showTyping: ITyping | null;
+    activeUserCount: number | null;
 }
 
 
 export default function ChatMsg(props: IChatMsgProps) {
 
-    const { allMsg, setAllMsg, wsRef, userName, showTyping } = props;
+    const { allMsg, setAllMsg, wsRef, userName, showTyping, activeUserCount } = props;
     const [showPop, setShowPop] = useState(false);
 
     return (
         <>
             {
-                showPop && <ChatPop showTyping={showTyping} userName={userName} allMsg={allMsg} setAllMsg={setAllMsg} wsRef={wsRef} />
+                showPop && <ChatPop activeUserCount={activeUserCount} showTyping={showTyping} userName={userName} allMsg={allMsg} setAllMsg={setAllMsg} wsRef={wsRef} />
             }
 
             <div onClick={() => setShowPop(prev => !prev)} className="fixed right-0 bottom-0  mr-5 mb-5 z-50 w-13 h-13 rounded-full bg-black flex items-center justify-center hover:bg-red-600 cursor-pointer">
@@ -41,7 +42,7 @@ export default function ChatMsg(props: IChatMsgProps) {
 
 export function ChatPop(props: IChatMsgProps) {
 
-    const { allMsg, setAllMsg, wsRef, userName, showTyping } = props;
+    const { allMsg, setAllMsg, wsRef, userName, showTyping, activeUserCount } = props;
     const [inputData, setInputData] = useState("");
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -87,9 +88,9 @@ export function ChatPop(props: IChatMsgProps) {
 
     return (
         <div className="fixed h-110 max-w-xs w-full border bg-black right-0 bottom-0 mr-5 mb-25 rounded-2xl z-50 flex flex-col">
-            <div className="py-3 px-3 bg-neutral-600 rounded-t-2xl">
+            <div className="py-3 px-3 bg-neutral-600 rounded-t-2xl flex justify-between">
                 <h1 className="font-semibold">Live Chat</h1>
-                {/* <h1>offline</h1> */}
+                <span> <span className="animate-pulse">🟢</span>Online : {activeUserCount}</span>
             </div>
 
             <div className="flex-1 p-3 overflow-y-auto space-y-3">

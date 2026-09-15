@@ -61,6 +61,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     const [mouseTrack, setMouseTrack] = useState<IMouseTrack[] | []>([]);
     const [showTyping, setShowTyping] = useState<ITyping | null>(null);
     const timerRef = useRef<NodeJS.Timeout>(null);
+    const [activeUserCount, setActiveUserCount] = useState<number | null>(null);
 
 
     const myToolBar = useToolBar();
@@ -772,6 +773,18 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                 return;
             }
 
+            if (parsedMsg.type === "leave_room") {
+                const msg = parsedMsg.payload.msg;
+                toast.message(`${msg}`);
+                return;
+            }
+
+            if (parsedMsg.type === "online_user_count") {
+                const count = parsedMsg.payload.count;
+                setActiveUserCount(count);
+                return;
+            }
+
             if (parsedMsg.type === "error") {
                 console.log("error message: ", event);
             }
@@ -801,6 +814,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     allMsg={allMsg}
                     setAllMsg={setAllMsg}
                     showTyping={showTyping}
+                    activeUserCount={activeUserCount}
                 />
             }
 

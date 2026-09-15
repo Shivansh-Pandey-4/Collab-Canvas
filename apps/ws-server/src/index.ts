@@ -5,6 +5,7 @@ import type { IUserInfo } from "./types/allTypes.js";
 import { prisma } from "@repo/db";
 import { onlineUserBroadCast } from "./handlers/onlineUserBroadcast.js";
 
+
 export const allSockets = new Map<string , Set<WebSocket>>();
 export const socketMapping = new Map<WebSocket, IUserInfo>();
 
