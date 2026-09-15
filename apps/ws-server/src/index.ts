@@ -3,9 +3,10 @@ import authChecker from "./authChecker.js";
 import  { clientMessageSchema } from "@repo/validation";
 import type { IUserInfo } from "./types/allTypes.js";
 import { prisma } from "@repo/db";
+import { onlineUserBroadCast } from "./handlers/onlineUserBroadcast.js";
 
-const allSockets = new Map<string , Set<WebSocket>>();
-const socketMapping = new Map<WebSocket, IUserInfo>();
+export const allSockets = new Map<string , Set<WebSocket>>();
+export const socketMapping = new Map<WebSocket, IUserInfo>();
 
 const wss = new WebSocketServer({port : 8080});
 
@@ -44,7 +45,7 @@ wss.on("connection", async(socket, request)=>{
                 allSockets.get(slug)?.add(socket);
                 socketMapping.set(socket, {name, userId: id, slug});
 
-                return allSockets.get(slug)?.forEach(s => {
+                 allSockets.get(slug)?.forEach(s => {
                     if(s.readyState === s.OPEN){
                         s.send(JSON.stringify({
                             type : "joined_room",
@@ -54,6 +55,9 @@ wss.on("connection", async(socket, request)=>{
                         }))
                     }
                 })
+
+                onlineUserBroadCast(slug);
+                return;
 
             }
 
@@ -182,7 +186,7 @@ wss.on("connection", async(socket, request)=>{
                 return socket.send(JSON.stringify({
                     type : "leave_room",
                     payload : {
-                        msg : "user leave the room successfully"
+                        msg : `${userInfo.name} left the room successfully`
                     }
                 }))
 
@@ -199,5 +203,40 @@ wss.on("connection", async(socket, request)=>{
             
         }
     })
+
+
+    socket.on("close", () => {
+        const userInfo = socketMapping.get(socket);
+
+        if (!userInfo) return;
+
+        const { slug, name } = userInfo;
+
+        // 1. Remove this socket from the room
+        const roomSockets = allSockets.get(slug);
+
+        roomSockets?.delete(socket);
+        socketMapping.delete(socket);
+
+        // 3. If no users are left, delete the room
+        if (roomSockets?.size === 0) {
+            allSockets.delete(slug);
+            return;
+        }
+
+        roomSockets?.forEach((s) => {
+            if (s.readyState === WebSocket.OPEN) {
+                s.send(JSON.stringify({
+                    type: "leave_room",
+                    payload: {
+                        msg: `${name} left the room`,
+                    },
+                }));
+            }
+        });
+
+        onlineUserBroadCast(slug);
+        return;
+    });
 
 })
