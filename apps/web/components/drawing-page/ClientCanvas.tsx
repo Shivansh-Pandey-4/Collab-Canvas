@@ -771,30 +771,18 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
 
 
     return (
-        // <>
-        //     <ToolBar />
-        //     <ChatMsg userName={userName} wsRef={wsRef} allMsg={allMsg} setAllMsg={setAllMsg} />
-        //     <canvas ref={myCanvas} height={600} width={1300} className="bg-white" />
-        //     {
-        //         settingWebsocket && <InfoMsg />
-        //     }
-        //     {
-        //         mouseTrack.map(user => (
-        //             <div className={`absolute top-${user.msg.x} left-${user.msg.y} `}>
-        //                 <span>{user.username}</span>
-        //                 <Pointer />
-        //             </div>
-        //         ))
-        //     }
-        // </>
         <>
 
-            <ChatMsg
-                userName={userName}
-                wsRef={wsRef}
-                allMsg={allMsg}
-                setAllMsg={setAllMsg}
-            />
+            {
+                !useLocalStorage && <ChatMsg
+                    userName={userName}
+                    wsRef={wsRef}
+                    allMsg={allMsg}
+                    setAllMsg={setAllMsg}
+                />
+            }
+
+
 
             <div className="relative">
                 <ToolBar />

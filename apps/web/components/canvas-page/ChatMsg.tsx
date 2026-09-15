@@ -4,7 +4,7 @@
 import Button from "@repo/ui/button";
 import Input from "@repo/ui/input";
 import { MessageSquareMore, X, SendHorizonal } from "lucide-react"
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IAllMsg } from "../drawing-page/ClientCanvas";
 import { toast } from "sonner";
 
@@ -64,6 +64,12 @@ export function ChatPop(props: IChatMsgProps) {
 
     }
 
+    function handleUserTyping(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) {
+        wsRef.current?.send(JSON.stringify({
+            type: "user_typing"
+        }));
+    }
+
     useEffect(() => {
         function scrollChat() {
             scrollRef.current?.scrollIntoView({
@@ -106,7 +112,11 @@ export function ChatPop(props: IChatMsgProps) {
             </div>
             <form onSubmit={(e) => handleSendMsg(e)} className="flex gap-x-2 py-3 px-3 bg-neutral-600 rounded-b-2xl">
 
-                <Input value={inputData} onChange={(e) => setInputData(e.target.value)} autoFocus type="text" placeholder="enter message" variant="sm" className="flex-1 border border-white bg-gray-700 text-white" />
+                <Input value={inputData} onChange={(e) => {
+                    setInputData(e.target.value);
+                    handleUserTyping(e);
+                }}
+                    autoFocus type="text" placeholder="enter message" variant="sm" className="flex-1 border border-white bg-gray-700 text-white" />
 
                 <Button type="submit" variant="secondary" className="px-2">
                     <SendHorizonal />

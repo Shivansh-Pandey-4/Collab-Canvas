@@ -81,6 +81,27 @@ wss.on("connection", async(socket, request)=>{
 
             }
 
+            if(result.data.type === "user_typing"){
+                const name = socketMapping.get(socket)?.name;
+                const slug = socketMapping.get(socket)?.slug;
+
+                if(!slug || !name){
+                    throw new Error("user not joined any room");
+                }
+
+                return allSockets.get(slug)?.forEach(s => {
+                     if(s !== socket){
+                        s.send(JSON.stringify({
+                            type : "user_typing",
+                            payload : {
+                                fromUser: name
+                            }
+                        }))
+                     }
+                })
+
+            }
+
 
             if(result.data.type === "canvas_drawing"){
                 const drawing = result.data.payload.msg;

@@ -37,6 +37,10 @@ const leaveRoomSchema = zod.object({
     type : zod.literal("leave_room")
 })
 
-const clientMessageSchema = zod.discriminatedUnion("type", [joinRoomSchema, chatSchema, leaveRoomSchema, canvasDrawingSchema, mouseMovementSchema]);
+const userTypingSchema = zod.object({
+    type : zod.literal("user_typing")
+})
+
+const clientMessageSchema = zod.discriminatedUnion("type", [joinRoomSchema, chatSchema, leaveRoomSchema, canvasDrawingSchema, mouseMovementSchema, userTypingSchema]);
 
 export default clientMessageSchema;
