@@ -6,8 +6,10 @@ import Footer from "./Footer";
 export default function Body() {
 
     return (
-        <div className="md:mx-4">
-            <Hero />
+        <div className="md:mx-4 overflow-x-hidden">
+            <div className="mx-2">
+                <Hero />
+            </div>
             <section className="mt-5 py-8 px-4 mb-2 text-center">
                 <h1 className="text-xl md:text-3xl  text-shadow-gray-500">
                     Sketchcalibur is a real-time collaborative whiteboard.
