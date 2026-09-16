@@ -10,7 +10,7 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <header className="max-w-2xl mx-auto mt-4 border border-zinc-700 py-4 rounded-full w-full sticky top-4 bg-black">
+        <header className="max-w-2xl mx-auto mt-4 border border-zinc-700 py-4 rounded-full w-full sticky top-4 bg-black z-50">
 
             {/* for sm device */}
             <nav className="md:hidden block px-6 relative">

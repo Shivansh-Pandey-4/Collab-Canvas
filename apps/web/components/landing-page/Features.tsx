@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
+import { MovingCursor } from "./MovingCursor";
 
 export default function Features() {
 
@@ -8,9 +9,9 @@ export default function Features() {
         <div className="mt-4 py-8 px-4">
             <h1 className="text-center text-3xl md:text-5xl text-zinc-200">Get to know the features</h1>
 
-            <section className="mt-4 border border-red-600 p-2 rounded-md gap-2">
+            <section className="mt-15 border border-red-600 p-2 rounded-md grid gap-2 md:grid-cols-12">
 
-                <div className="border rounded-md px-4">
+                <div className="border rounded-md px-4 md:col-span-8">
                     <h1 className="text-xl md:text-2xl text-zinc-100">Infinite Canvas integrated with Excalidraw</h1>
                     <p className="text-gray-500 mt-0.5 max-w-sm">Sketch, brainstorm, and map out architectures without ever running out of space.</p>
                     <div className="border mt-2">
@@ -18,14 +19,14 @@ export default function Features() {
                     </div>
                 </div>
 
-                <div className="border rounded-md px-4 md:col-span-7">
+                <div className="border rounded-md px-4 md:col-span-4">
                     <h1 className="text-xl md:text-2xl text-zinc-100">Customised Real-time Multi-cursor</h1>
                     <p className="text-gray-500 mt-0.5 max-w-sm">See your team's ideas come to life within second.</p>
 
-
+                    <MovingCursor />
                 </div>
 
-                <div className="border px-4 rounded-md md:col-span-3">
+                <div className="border px-4 rounded-md md:col-span-12">
                     <h1 className="text-xl md:text-2xl text-zinc-100">Watch the Demo</h1>
                     <p className="text-gray-500 mt-0.5 max-w-sm">See how Sketchcalibur handles complex diagrams and real-time syncing.</p>
 
