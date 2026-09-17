@@ -1,3 +1,5 @@
+import { IconBrandGithub, IconBrandTwitter, IconBrandLinkedin } from "@tabler/icons-react"
+
 
 export const FaqData = [
     {
@@ -32,3 +34,23 @@ export const FaqData = [
     }
 ]
 
+export const SocialContactData = [
+    {
+        id : 1,
+        name : "github",
+        href : "https://github.com/Shivansh-Pandey-4",
+        icon : IconBrandGithub
+    },
+    {
+        id : 2,
+        name : "linkedin",
+        href : "https://www.linkedin.com/in/shivansh-pandey-3ab4b83a3/",
+        icon : IconBrandLinkedin
+    },
+    {
+        id : 3,
+        name : "twitter",
+        href : "https://x.com/ShivanshIsHere",
+        icon : IconBrandTwitter
+    }
+]

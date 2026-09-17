@@ -7,8 +7,8 @@ export default function Features() {
 
 
     return (
-        <div className="mt-4 py-15 px-6">
-            <h1 className="text-center text-3xl md:text-5xl text-zinc-200 font-bold">Get to know the features</h1>
+        <div className="mt-4 py-15 px-6 scroll-mt-20" id="features">
+            <h1 className="text-center text-3xl md:text-5xl text-zinc-200 font-bold ">Get to know the features</h1>
 
             <section className="md:mt-15 mt-10 py-2 rounded-md grid md:gap-x-2 md:gap-y-10 lg:grid-cols-12 ">
 

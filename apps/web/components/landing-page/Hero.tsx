@@ -5,7 +5,7 @@ import Link from "next/link"
 export default function Hero() {
 
     return (
-        <div className="border border-gray-800 py-20 px-10 mt-12 text-center mx-auto overflow-hidden">
+        <div id="hero" className="border border-gray-800 py-20 px-10 mt-12 text-center mx-auto overflow-hidden scroll-mt-32">
             <p className="text-4xl md:text-5xl lg:text-7xl  font-semibold">Build faster with<br />Collab Canvas</p>
 
             <div className="mt-8 space-x-5 flex items-center justify-center">

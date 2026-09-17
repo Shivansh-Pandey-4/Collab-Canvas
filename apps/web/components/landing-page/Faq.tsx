@@ -6,7 +6,7 @@ export default function Faq() {
 
 
     return (
-        <div className="px-6 mx-auto md:max-w-3xl lg:max-w-6xl w-full py-10">
+        <div id="faq" className="px-6 mx-auto md:max-w-3xl lg:max-w-6xl w-full py-10 scroll-mt-20">
             <div className="border-b border-gray-600 py-6">
                 <h1 className="text-5xl font-bold text-white">FAQs</h1>
                 <p className="text-gray-300">Get all your questions answered about CollabCanvas.</p>
