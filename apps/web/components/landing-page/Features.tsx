@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import { MovingCursor } from "./MovingCursor";
 import { RotatingGlobe } from "./RotatingGlobe";
+
 
 export default function Features() {
 
@@ -10,7 +10,7 @@ export default function Features() {
         <div className="mt-4 py-15 px-6">
             <h1 className="text-center text-3xl md:text-5xl text-zinc-200 font-bold">Get to know the features</h1>
 
-            <section className="md:mt-15 mt-10 py-2 rounded-md grid md:gap-x-2 gap-y-4 lg:grid-cols-12 ">
+            <section className="md:mt-15 mt-10 py-2 rounded-md grid md:gap-x-2 md:gap-y-10 lg:grid-cols-12 ">
 
                 <div className="rounded-md p-4 lg:col-span-7">
                     <h1 className="text-xl md:text-2xl text-white">Infinite Canvas integrated with Excalidraw</h1>

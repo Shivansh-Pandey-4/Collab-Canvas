@@ -2,6 +2,7 @@ import Features from "./Features";
 import Hero from "./Hero";
 import Contact from "./Contact";
 import Footer from "./Footer";
+import Faq from "./Faq";
 
 export default function Body() {
 
@@ -19,6 +20,7 @@ export default function Body() {
                 </p>
             </section>
             <Features />
+            <Faq />
             <Contact />
             <Footer />
         </div>
