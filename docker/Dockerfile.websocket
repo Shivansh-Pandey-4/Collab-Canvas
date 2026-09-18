@@ -1,0 +1,67 @@
+FROM   node:24-alpine AS builder
+
+WORKDIR /app
+
+COPY package-lock.json   . 
+COPY package.json        .
+COPY turbo.json          .
+
+COPY apps/ws-server/package.json                ./apps/ws-server/package.json
+COPY packages/db/package.json                   ./packages/db/package.json
+COPY packages/auth/package.json                 ./packages/auth/package.json
+COPY packages/validation/package.json           ./packages/validation/package.json
+COPY packages/typescript-config/package.json    ./packages/typescript-config/package.json
+
+RUN npm install -g npm@11.16.0
+RUN npm install
+
+COPY apps/ws-server               ./apps/ws-server
+COPY packages/auth                ./packages/auth
+COPY packages/db                  ./packages/db
+# COPY packages/db/prisma           ./packages/db/prisma
+COPY packages/validation          ./packages/validation
+COPY packages/typescript-config    ./packages/typescript-config
+
+RUN npm run generate:db
+RUN npm run build:auth
+RUN npm run build:db
+RUN npm run build:validation
+RUN npm run build:wsServer
+
+
+FROM   node:24-alpine 
+
+WORKDIR /app
+
+COPY package-lock.json   . 
+COPY package.json        .
+COPY turbo.json          .
+
+COPY apps/ws-server/package.json                ./apps/ws-server/package.json
+COPY packages/db/package.json                   ./packages/db/package.json
+COPY packages/auth/package.json                 ./packages/auth/package.json
+COPY packages/validation/package.json           ./packages/validation/package.json
+COPY packages/typescript-config/package.json    ./packages/typescript-config/package.json
+
+RUN npm install -g npm@11.16.0
+RUN npm install --omit=dev
+
+
+COPY --from=builder app/apps/ws-server/dist               ./apps/ws-server/dist
+COPY --from=builder app/packages/auth/dist                ./packages/auth/dist
+COPY --from=builder app/packages/db/dist                  ./packages/db/dist
+COPY --from=builder app/packages/db/prisma                ./packages/db/prisma
+COPY --from=builder app/packages/db/prisma.config.ts      ./packages/db/prisma.config.ts
+COPY --from=builder app/packages/validation/dist               ./packages/validation/dist
+COPY --from=builder app/packages/typescript-config        ./packages/typescript-config
+
+
+EXPOSE 8080
+
+
+CMD [ "sh", "-c", "npm run migrate:db && npm run start:wsServer"  ]
+
+
+
+
+

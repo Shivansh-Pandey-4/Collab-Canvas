@@ -11,9 +11,11 @@
     "build:auth": "cd packages/auth && npm run build",
     "build:validation": "cd packages/validation && npm run build",
     "build:backend": "cd apps/http-server && npm run build",
+    "build:wsServer": "cd apps/ws-server  && npm run build", 
     "generate:db": "cd packages/db && npx prisma generate",
     "migrate:db": "cd packages/db && npx prisma migrate dev",
-    "start:backend": "cd apps/http-server && npm run start"
+    "start:backend": "cd apps/http-server && npm run start",
+    "start:wsServer": "cd apps/ws-server  && npm run start"
   },
   "devDependencies": {
     "prettier": "^3.6.0",
