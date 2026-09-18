@@ -9,13 +9,18 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build:db": "cd packages/db && npm run build",
     "build:auth": "cd packages/auth && npm run build",
+    "build:ui": "cd packages/ui && npm run build",
     "build:validation": "cd packages/validation && npm run build",
     "build:backend": "cd apps/http-server && npm run build",
     "build:wsServer": "cd apps/ws-server  && npm run build", 
+    "build:web": "cd apps/web  && npm run build", 
     "generate:db": "cd packages/db && npx prisma generate",
     "migrate:db": "cd packages/db && npx prisma migrate dev",
     "start:backend": "cd apps/http-server && npm run start",
-    "start:wsServer": "cd apps/ws-server  && npm run start"
+    "start:wsServer": "cd apps/ws-server  && npm run start",
+    "start:frontend" : "cd apps/web && npm run start",
+    "dev:frontend" : "cd apps/web && npm run dev",
+    "ui:dev" : "cd packages/ui && npm run dev"
   },
   "devDependencies": {
     "prettier": "^3.6.0",

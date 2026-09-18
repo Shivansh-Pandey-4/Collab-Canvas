@@ -6,26 +6,31 @@ COPY package-lock.json   .
 COPY package.json        .
 COPY turbo.json          .
 
-COPY apps/http-server/package.json                ./apps/http-server/package.json
+COPY apps/web/package.json                      ./apps/web/package.json
 COPY packages/db/package.json                   ./packages/db/package.json
 COPY packages/auth/package.json                 ./packages/auth/package.json
+COPY packages/ui/package.json                   ./packages/ui/package.json
+COPY packages/tailwind-config/package.json      ./packages/tailwind-config/package.json
 COPY packages/validation/package.json           ./packages/validation/package.json
 COPY packages/typescript-config/package.json    ./packages/typescript-config/package.json
 
 RUN npm install -g npm@11.16.0
 RUN npm install
 
-COPY apps/http-server               ./apps/http-server
-COPY packages/auth                ./packages/auth
-COPY packages/db                  ./packages/db
-COPY packages/validation          ./packages/validation
-COPY packages/typescript-config    ./packages/typescript-config
+COPY apps/web                       ./apps/web
+COPY packages/auth                  ./packages/auth
+COPY packages/ui                     ./packages/ui
+COPY packages/tailwind-config        ./packages/tailwind-config
+COPY packages/db                    ./packages/db
+COPY packages/validation            ./packages/validation
+COPY packages/typescript-config     ./packages/typescript-config
 
 RUN npm run generate:db
 RUN npm run build:auth
 RUN npm run build:db
 RUN npm run build:validation
-RUN npm run build:backend
+RUN npm run build:ui
+RUN npm run build:web
 
 
 FROM   node:24-alpine 
@@ -36,31 +41,30 @@ COPY package-lock.json   .
 COPY package.json        .
 COPY turbo.json          .
 
-COPY apps/http-server/package.json                ./apps/http-server/package.json
+COPY apps/web/package.json                      ./apps/web/package.json
 COPY packages/db/package.json                   ./packages/db/package.json
 COPY packages/auth/package.json                 ./packages/auth/package.json
 COPY packages/validation/package.json           ./packages/validation/package.json
+COPY packages/ui/package.json                   ./packages/ui/package.json
 COPY packages/typescript-config/package.json    ./packages/typescript-config/package.json
+COPY packages/tailwind-config/package.json      ./packages/tailwind-config/package.json
+
 
 RUN npm install -g npm@11.16.0
 RUN npm install --omit=dev
 
 
-COPY --from=builder app/apps/http-server/dist               ./apps/http-server/dist
+COPY --from=builder app/apps/web/dist                     ./apps/web/dist
 COPY --from=builder app/packages/auth/dist                ./packages/auth/dist
 COPY --from=builder app/packages/db/dist                  ./packages/db/dist
 COPY --from=builder app/packages/db/prisma                ./packages/db/prisma
 COPY --from=builder app/packages/db/prisma.config.ts      ./packages/db/prisma.config.ts
-COPY --from=builder app/packages/validation/dist               ./packages/validation/dist
+COPY --from=builder app/packages/validation/dist          ./packages/validation/dist
+COPY --from=builder app/packages/ui/dist                   ./packages/ui/dist
 COPY --from=builder app/packages/typescript-config        ./packages/typescript-config
 
 
-EXPOSE 3000
+EXPOSE 3001
 
 
-CMD [ "sh", "-c", "npm run migrate:db && npm run start:backend"  ]
-
-
-
-
-
+CMD [ "sh", "-c", "npm run migrate:db && npm run start:frontend"  ]

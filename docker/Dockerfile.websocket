@@ -18,7 +18,6 @@ RUN npm install
 COPY apps/ws-server               ./apps/ws-server
 COPY packages/auth                ./packages/auth
 COPY packages/db                  ./packages/db
-# COPY packages/db/prisma           ./packages/db/prisma
 COPY packages/validation          ./packages/validation
 COPY packages/typescript-config    ./packages/typescript-config
 
