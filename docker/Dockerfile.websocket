@@ -25,8 +25,8 @@ COPY packages/validation          ./packages/validation
 COPY packages/typescript-config    ./packages/typescript-config
 
 RUN npm run generate:db
-RUN npm run build:auth
 RUN npm run build:db
+RUN npm run build:auth
 RUN npm run build:validation
 RUN npm run build:wsServer
 
