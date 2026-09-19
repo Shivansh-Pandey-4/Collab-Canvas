@@ -1,5 +1,6 @@
 import MainBar from "../../../components/dashboard-page/MainBar";
 import { auth } from "@repo/auth";
+import { prisma } from "@repo/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -83,6 +84,9 @@ export default async function Dashboard() {
     const session = await auth.api.getSession({
         headers: await headers()
     })
+
+    // const users = await prisma.user.findMany({});
+    // console.log("just for ssr in the nextjs ", users);
 
     if (!session) {
         return redirect("/");

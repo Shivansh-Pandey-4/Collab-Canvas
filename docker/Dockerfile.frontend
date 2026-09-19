@@ -1,5 +1,8 @@
 FROM   node:24-alpine AS builder
 
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
 WORKDIR /app
 
 COPY package-lock.json   . 
@@ -35,6 +38,8 @@ RUN npm run build:web
 
 FROM   node:24-alpine 
 
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 WORKDIR /app
 
 COPY package-lock.json   . 
@@ -54,7 +59,7 @@ RUN npm install -g npm@11.16.0
 RUN npm install --omit=dev
 
 
-COPY --from=builder app/apps/web/dist                     ./apps/web/dist
+COPY --from=builder app/apps/web/.next                    ./apps/web/.next
 COPY --from=builder app/packages/auth/dist                ./packages/auth/dist
 COPY --from=builder app/packages/db/dist                  ./packages/db/dist
 COPY --from=builder app/packages/db/prisma                ./packages/db/prisma
@@ -67,4 +72,4 @@ COPY --from=builder app/packages/typescript-config        ./packages/typescript-
 EXPOSE 3001
 
 
-CMD [ "sh", "-c", "npm run migrate:db && npm run start:frontend"  ]
+CMD ["npm", "run", "start:frontend"  ]

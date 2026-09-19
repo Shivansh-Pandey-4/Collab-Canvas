@@ -58,7 +58,7 @@ COPY --from=builder app/packages/typescript-config        ./packages/typescript-
 EXPOSE 8080
 
 
-CMD [ "sh", "-c", "npm run migrate:db && npm run start:wsServer"  ]
+CMD [ "npm", "run", " start:wsServer""  ]
 
 
 
