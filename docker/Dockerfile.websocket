@@ -1,5 +1,8 @@
 FROM   node:24-alpine AS builder
 
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
 WORKDIR /app
 
 COPY package-lock.json   . 
@@ -29,6 +32,10 @@ RUN npm run build:wsServer
 
 
 FROM   node:24-alpine 
+
+
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
 WORKDIR /app
 
