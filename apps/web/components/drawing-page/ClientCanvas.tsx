@@ -695,7 +695,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
         if (useLocalStorage) return;
 
         setSettingWebsocket(true);
-        const ws = new WebSocket("ws://localhost:8080");
+        const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`);
         wsRef.current = ws;
 
         ws.onmessage = (event) => {

@@ -26,7 +26,7 @@ export default function JoinRoomClient() {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/room/create`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/create`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -85,7 +85,7 @@ export default function JoinRoomClient() {
         setIsJoining(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/room/join/${roomName}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/${roomName}`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

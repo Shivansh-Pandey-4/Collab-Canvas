@@ -60,7 +60,7 @@ async function getUserData(userId: string) {
 
     const requestHeaders = await headers();
     try {
-        const response = await fetch(`http://localhost:3000/room/user/${userId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/user/${userId}`, {
             headers: {
                 cookie: requestHeaders.get("cookie") ?? "",
             },

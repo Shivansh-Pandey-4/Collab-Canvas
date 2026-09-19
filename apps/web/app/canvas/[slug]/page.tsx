@@ -47,7 +47,7 @@ async function roomExist(roomName: string) {
         const requestHeaders = await headers();
 
         const response = await fetch(
-            `http://localhost:3000/room/${roomName}`,
+            `${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/${roomName}`,
             {
                 method: "GET",
                 headers: {
