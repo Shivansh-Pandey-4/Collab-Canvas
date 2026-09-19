@@ -9,7 +9,7 @@ export const auth = betterAuth({
     }),
     
     trustedOrigins: [
-        "http://localhost:3001",
+        process.env.PUBLIC_TRUSTED_FRONTED_BETTER_AUTH_URL!
     ],
     emailAndPassword : { 
         enabled : true

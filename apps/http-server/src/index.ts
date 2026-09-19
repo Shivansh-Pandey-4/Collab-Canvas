@@ -13,7 +13,7 @@ const PORT = process.env.HTTP_PORT || 4000;
 
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: process.env.PUBLIC_TRUSTED_FRONTED_BETTER_AUTH_URL,
     credentials: true,
     // methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
