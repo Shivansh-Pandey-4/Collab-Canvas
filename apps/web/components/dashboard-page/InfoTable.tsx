@@ -17,6 +17,8 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo | null }) 
         (member) => !createdRoomIds.has(member.roomId)
     );
 
+    console.log("roomCreated variable: ", roomCreated);
+
     return (
         <div className="w-full overflow-x-auto lg:overflow-x-visible">
             <table className="w-full min-w-2xl table-fixed md:table-auto border border-gray-400">

@@ -12,6 +12,8 @@ import { Trash, PencilIcon } from "lucide-react";
 
 export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedName: string; admin: boolean; }) {
 
+    console.log("roomCreated String ", roomCreatedName);
+
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isLeaving, setIsLeaving] = useState(false);
@@ -40,7 +42,7 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
         setIsDeleting(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/room/${roomName}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/${roomName}`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -93,7 +95,7 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
         setIsDeleting(true);
 
         try {
-            const response = await fetch(`http://localhost:3000/room/leave/${roomName}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/leave/${roomName}`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: {

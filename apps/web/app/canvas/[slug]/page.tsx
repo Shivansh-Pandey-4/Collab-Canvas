@@ -89,6 +89,8 @@ export default async function DynamicCanvas({ params }: { params: Promise<{ slug
         headers: await headers()
     });
 
+    console.log("debugging session in frontend : ", session);
+
     if (!session) {
         return redirect("/");
     }

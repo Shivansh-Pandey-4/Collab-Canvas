@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.HTTP_PORT || 4000;
+const PORT = Number(process.env.HTTP_PORT) || 4000;
 
 app.use(
   cors({
@@ -33,6 +33,6 @@ app.get("/", (req: Request, res: Response)=>{
     })
 })
 
-app.listen(PORT, ()=>{
+app.listen(PORT, "0.0.0.0", ()=>{
     console.log(`app started listening on the port: ${PORT}`);
 })
