@@ -28,6 +28,8 @@ jobs:
           file: ./docker/Dockerfile.backend
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/backend:${{github.sha}}
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
 
       - name: Build and push frontend
         uses: docker/build-push-action@v7
