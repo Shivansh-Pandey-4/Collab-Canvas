@@ -1,9 +1,16 @@
-name: Build docker image and deploy to VM
+name: Build websocket docker image and Run docker container on VM
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "apps/ws-server/**"
+      - "docker/Dockerfile.websocket"
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - "turbo.json"
 
 jobs:
   build_and_deploy:
@@ -25,29 +32,6 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./docker/Dockerfile.backend
-          push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/backend:${{github.sha}}
-          build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-
-      - name: Build and push frontend
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./docker/Dockerfile.frontend
-          push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/frontend:${{github.sha}}
-          build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            NEXT_PUBLIC_BETTER_AUTH_URL=${{secrets.NEXT_PUBLIC_BETTER_AUTH_URL}}
-            BETTER_AUTH_URL=${{secrets.BETTER_AUTH_URL}}
-            NEXT_PUBLIC_WEBSOCKET_URL=${{secrets.NEXT_PUBLIC_WEBSOCKET_URL}}
-
-      - name: Build and push websocket
-        uses: docker/build-push-action@v7
-        with:
-          context: .
           file: ./docker/Dockerfile.websocket
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/websocket:${{github.sha}}
@@ -63,5 +47,8 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            whoami
-            ls -al
+            cd ~/collabcanvas
+
+            sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/websocket:${{github.sha}} && sudo docker rm -f collab-websocket && sudo docker run -p 3001:3001 -d --env-file .env --name collab-websocket ${{secrets.DOCKERHUB_USERNAME}}/websocket:${{github.sha}}
+
+            sudo docker image prune -a -f
