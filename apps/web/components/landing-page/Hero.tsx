@@ -1,5 +1,5 @@
-import Button from "@repo/ui/button"
-import Link from "next/link"
+import HeroClientBtn from "./HeroClientBtn";
+
 
 
 export default function Hero() {
@@ -8,14 +8,7 @@ export default function Hero() {
         <div id="hero" className="border border-gray-800 py-20 px-10 mt-12 text-center mx-auto overflow-hidden scroll-mt-32">
             <p className="text-4xl md:text-5xl lg:text-7xl  font-semibold">Build faster with<br />Collab Canvas</p>
 
-            <div className="mt-8 space-x-5 flex items-center justify-center">
-                <Link href={"/canvas"}>
-                    <Button variant="secondary" size="lg" >Be My Guest</Button>
-                </Link>
-                <Link href={"/signup"}>
-                    <Button variant="primary" size="lg" >Create Account</Button>
-                </Link>
-            </div>
+            <HeroClientBtn />
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ali absolute -left-[-4px] md:left-5 top-29 h-10 w-10">
                 <path d="M12 5h14"></path>

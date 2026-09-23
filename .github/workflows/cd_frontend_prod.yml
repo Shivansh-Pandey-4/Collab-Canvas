@@ -53,5 +53,3 @@ jobs:
             cd ~/collabcanvas
 
             sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/frontend:${{github.sha}} && sudo docker rm -f collab-frontend && sudo docker run -p 3001:3001 -d --env-file .env --name collab-frontend ${{secrets.DOCKERHUB_USERNAME}}/frontend:${{github.sha}}
-
-            sudo docker image prune -a -f
