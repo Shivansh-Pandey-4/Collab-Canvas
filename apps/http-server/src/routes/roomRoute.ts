@@ -244,9 +244,16 @@ router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
 })
 
 
-router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string;}>, res: Response)=>{
+router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string;}, {}, {}, {page ?: string; limit ?: string;}>, res: Response)=>{
 
     const userId = req.params?.userId;
+    const requestedPage = parseInt(req.query.page || "1");
+    const requestedLimit = parseInt(req.query.limit || "5");
+
+    const page = (Number.isNaN(requestedPage) || requestedPage < 1 ) ? 1 : requestedPage;
+    const limit = (Number.isNaN(requestedLimit) || requestedLimit < 1) ? 5 : Math.min(requestedLimit, 5);
+
+    const skip = (page - 1) * limit;
 
     if(!userId || !userId.trim()){
         return res.status(400).json({
@@ -268,6 +275,11 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
                                 member: true
                             }
                         }
+                    },
+                    take : limit,
+                    skip : skip,
+                    orderBy : {
+                        id : "asc"
                     }
                 },
                 member: {
@@ -277,6 +289,11 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
                                 _count : true
                             }
                         }
+                    },
+                    take : limit,
+                    skip : skip,
+                    orderBy : {
+                        id : "asc"
                     }
                 }
             }
@@ -286,15 +303,35 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
         if(!userInfo){
             return res.status(404).json({
                 success : false,
-                msg : "user not found"
+                msg : "user not found",
             })
         }
 
+        const totalRooms = await prisma.roomMember.count({
+            where : {
+                userId : userId
+            }
+        })
+
+        const totalPage = Math.ceil(totalRooms / limit);
+
+        if(page > totalPage){
+            return res.status(404).json({
+                success : false,
+                msg : "page does not exist",
+            })
+        }
 
         return res.json({
             success : true,
             msg : "user found successfully",
-            userInfo
+            userInfo,
+            pagination : {
+                currentPage : page,
+                totalPage : totalPage,
+                totalRooms : totalRooms,
+                limit : limit
+            }
         })
 
     } catch (error) {
