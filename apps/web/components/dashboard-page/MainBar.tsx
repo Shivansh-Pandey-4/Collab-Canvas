@@ -22,7 +22,7 @@ export default function MainBar({ userInfo }: { userInfo: IUserInfo | null }) {
                 <InfoTable userInfo={userInfo} />
             </div>
             <div className="mt-3 py-3">
-                <PageCount />
+                <PageCount userInfo={userInfo} />
             </div>
         </div>
     )

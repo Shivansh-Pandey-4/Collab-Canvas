@@ -52,15 +52,22 @@ export type IUserInfo = ({
         image: string | null;
         createdAt: Date;
         updatedAt: Date;
-    }) | null
+    }) | null;
+
+    pagination: {
+        currentPage: number;
+        totalPage: number;
+        totalRooms: number;
+        limit: number;
+    }
 })
 
 
-async function getUserData(userId: string) {
+export async function getUserData(userId: string, page = 1, limit = 5) {
 
     const requestHeaders = await headers();
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/user/${userId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/user/${userId}?page=${page}&limit=${limit}`, {
             headers: {
                 cookie: requestHeaders.get("cookie") ?? "",
             },
@@ -79,7 +86,7 @@ async function getUserData(userId: string) {
 }
 
 
-export default async function Dashboard() {
+export default async function Dashboard({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
 
     const session = await auth.api.getSession({
         headers: await headers()
@@ -92,10 +99,26 @@ export default async function Dashboard() {
         return redirect("/");
     }
 
-    console.log("session inside dashboard", session)
+    const params = await searchParams;
+    let page = 1;
 
-    const userInfo = await getUserData(session.user.id);
+    if (params.page === undefined) {
+        page = 1;
+    }
+    else {
+        const parsedPage = Number(params.page);
+        if (!Number.isInteger(parsedPage) || parsedPage < 1) {
+            throw new Error("Page not found");
+        }
+        page = parsedPage;
+    }
+
+    const userInfo = await getUserData(session.user.id, page, 5);
     console.log("userinfo ", userInfo);
+
+    if (userInfo === null) {
+        throw new Error("Page not found")
+    }
 
     return (
         <div className="h-full">
