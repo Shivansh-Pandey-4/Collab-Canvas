@@ -2,7 +2,7 @@ import MainBar from "../../../components/dashboard-page/MainBar";
 import { auth } from "@repo/auth";
 import { prisma } from "@repo/db";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export type IUser = {
     createdAt: Date;
@@ -80,13 +80,14 @@ export async function getUserData(userId: string, page = 1, limit = 5) {
         const data: IUserInfo = await response.json();
         return data;
 
-    } catch (error) {
+    } catch {
         return null;
     }
 }
 
 
 export default async function Dashboard({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+
 
     const session = await auth.api.getSession({
         headers: await headers()
@@ -108,16 +109,18 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     else {
         const parsedPage = Number(params.page);
         if (!Number.isInteger(parsedPage) || parsedPage < 1) {
-            throw new Error("Page not found");
+            // throw new Error("Page not found");
+            notFound();
         }
         page = parsedPage;
     }
 
     const userInfo = await getUserData(session.user.id, page, 5);
-    console.log("userinfo ", userInfo);
+    // console.log("userinfo ", userInfo);
 
     if (userInfo === null) {
-        throw new Error("Page not found")
+        // throw new Error("Page not found")
+        notFound();
     }
 
     return (
