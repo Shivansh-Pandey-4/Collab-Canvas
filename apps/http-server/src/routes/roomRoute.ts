@@ -313,7 +313,7 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
             }
         })
 
-        const totalPage = Math.ceil(totalRooms / limit);
+        const totalPage = Math.max(1, Math.ceil(totalRooms / limit));
 
         if(page > totalPage){
             return res.status(404).json({

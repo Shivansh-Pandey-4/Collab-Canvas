@@ -5,7 +5,7 @@ import EllipsisHover from "./EllipsisHover";
 export default function InfoTable({ userInfo }: { userInfo: IUserInfo | null }) {
 
     // const roomCreated = userInfo?.userInfo?.roomCreated;
-    console.log("inside infotable, ", userInfo);
+    // console.log("inside infotable, ", userInfo);
     const roomCreated = userInfo?.userInfo?.roomCreated ?? [];
     const members = userInfo?.userInfo?.member ?? [];
 
@@ -17,7 +17,7 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo | null }) 
         (member) => !createdRoomIds.has(member.roomId)
     );
 
-    console.log("roomCreated variable: ", roomCreated);
+    // console.log("roomCreated variable: ", roomCreated);
 
     return (
         <div className="w-full overflow-x-auto lg:overflow-x-visible">
@@ -31,38 +31,77 @@ export default function InfoTable({ userInfo }: { userInfo: IUserInfo | null }) 
                         <th className="border border-gray-300 py-2 ">Actions</th>
                     </tr>
                 </thead>
-                {
-                    roomCreated.length > 0 && <tbody>
-                        {roomCreated.map((item) => (
-                            <tr key={item.id} className=" text-center">
-                                <td className="pl-2 py-3">{item.slug}</td>
-                                <td className="pl-2 py-3"><span className="border px-3 py-1 rounded-lg bg-indigo-500 border-black">Admin </span></td>
-                                <td className="pl-2 py-3">{item._count.member}</td>
-                                <td className="pl-2 py-3">{new Date(item.createdAt).toLocaleString()}</td>
-                                <td className="pl-2 py-3">
-                                    <EllipsisHover admin={true} roomCreatedName={item.slug} />
-                                </td>
-                            </tr>
-                        ))}
 
-                    </tbody>
-                }
-                {
-                    participantRooms.length > 0 && <tbody>
-                        {participantRooms.map((item) => (
-                            <tr key={item.id} className=" text-center">
-                                <td className="pl-2 py-3">{item.room.slug}</td>
-                                <td className="pl-2 py-3"><span className="border px-3 py-1 rounded-lg bg-orange-200 text-black">Participant</span></td>
-                                <td className="pl-2 py-3">{item.room._count.member}</td>
-                                <td className="pl-2 py-3">{new Date(item.room.createdAt).toLocaleString()}</td>
-                                <td className="pl-2 py-3">
-                                    <EllipsisHover admin={false} roomCreatedName={item.room.slug} />
-                                </td>
-                            </tr>
-                        ))}
+                <tbody>
+                    {roomCreated.map((item) => (
+                        <tr key={item.id} className="text-center">
+                            <td className="pl-2 py-3">{item.slug}</td>
 
-                    </tbody>
-                }
+                            <td className="pl-2 py-3">
+                                <span className="border px-3 py-1 rounded-lg bg-indigo-500 border-black">
+                                    Admin
+                                </span>
+                            </td>
+
+                            <td className="pl-2 py-3">{item._count.member}</td>
+
+                            <td className="pl-2 py-3">
+                                {new Date(item.createdAt).toLocaleString()}
+                            </td>
+
+                            <td className="pl-2 py-3">
+                                <EllipsisHover
+                                    admin={true}
+                                    roomCreatedName={item.slug}
+                                />
+                            </td>
+                        </tr>
+                    ))}
+
+                    {participantRooms.map((item) => (
+                        <tr key={item.id} className="text-center">
+                            <td className="pl-2 py-3">{item.room.slug}</td>
+
+                            <td className="pl-2 py-3">
+                                <span className="border px-3 py-1 rounded-lg bg-orange-200 text-black">
+                                    Participant
+                                </span>
+                            </td>
+
+                            <td className="pl-2 py-3">
+                                {item.room._count.member}
+                            </td>
+
+                            <td className="pl-2 py-3">
+                                {new Date(item.room.createdAt).toLocaleString()}
+                            </td>
+
+                            <td className="pl-2 py-3">
+                                <EllipsisHover
+                                    admin={false}
+                                    roomCreatedName={item.room.slug}
+                                />
+                            </td>
+                        </tr>
+                    ))}
+
+                    {roomCreated.length === 0 && participantRooms.length === 0 && (
+                        <tr>
+                            <td colSpan={5} className="py-12 text-center">
+                                <div className="flex flex-col items-center gap-2">
+                                    <h2 className="text-lg font-semibold">
+                                        No rooms yet
+                                    </h2>
+
+                                    <p className="text-sm text-gray-500">
+                                        You haven't created or joined any rooms yet.
+                                        Create a new room or join an existing one to get started.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
             </table>
         </div >
     )

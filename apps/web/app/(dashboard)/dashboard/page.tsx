@@ -1,6 +1,5 @@
 import MainBar from "../../../components/dashboard-page/MainBar";
 import { auth } from "@repo/auth";
-import { prisma } from "@repo/db";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
@@ -93,8 +92,6 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         headers: await headers()
     })
 
-    // const users = await prisma.user.findMany({});
-    // console.log("just for ssr in the nextjs ", users);
 
     if (!session) {
         return redirect("/");
@@ -116,11 +113,9 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     }
 
     const userInfo = await getUserData(session.user.id, page, 5);
-    // console.log("userinfo ", userInfo);
 
     if (userInfo === null) {
-        // throw new Error("Page not found")
-        notFound();
+        return notFound();
     }
 
     return (
