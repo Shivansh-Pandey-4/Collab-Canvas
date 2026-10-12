@@ -53,12 +53,16 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
             let data: IData | null = null;
             try {
                 data = await response.json();
-            } catch (error) {
+            } catch {
                 data = null;
             }
 
             if (!response.ok) {
-                toast.error(data?.error || data?.msg || "failed to delete the room")
+                if (data) {
+                    toast.error(data.error || data.msg || "failed to delete the room")
+                    return;
+                }
+                toast.error("failed to delete the room");
                 return;
             }
 
@@ -75,7 +79,7 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
 
         } catch (error) {
             if (error instanceof TypeError) {
-                toast.error(error.message);
+                toast.error(error.message + " : network error");
                 return;
             }
             if (error instanceof Error) {
@@ -106,7 +110,7 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
             let data: IData | null = null;
             try {
                 data = await response.json();
-            } catch (error) {
+            } catch {
                 data = null;
             }
 
@@ -128,7 +132,7 @@ export default function EllipsisHover({ roomCreatedName, admin }: { roomCreatedN
 
         } catch (error) {
             if (error instanceof TypeError) {
-                toast.error(error.message);
+                toast.error(error.message + " : network error ");
                 return;
             }
             if (error instanceof Error) {

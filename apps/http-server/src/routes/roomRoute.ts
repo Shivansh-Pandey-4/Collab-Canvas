@@ -244,11 +244,12 @@ router.get("/:slug", async (req: Request<{slug ?: string;}>, res: Response)=>{
 })
 
 
-router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string;}, {}, {}, {page ?: string; limit ?: string;}>, res: Response)=>{
+router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string;}, {}, {}, {page ?: string; limit ?: string; search ?:string;}>, res: Response)=>{
 
     const userId = req.params?.userId;
     const requestedPage = parseInt(req.query.page || "1");
     const requestedLimit = parseInt(req.query.limit || "5");
+    const requestedSearch = req.query.search || "";
 
     const page = (Number.isNaN(requestedPage) || requestedPage < 1 ) ? 1 : requestedPage;
     const limit = (Number.isNaN(requestedLimit) || requestedLimit < 1) ? 5 : Math.min(requestedLimit, 5);
@@ -269,6 +270,16 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
             },
             include : {
                 roomCreated: {
+                     ...(requestedSearch
+                                ? {
+                                    where: {
+                                        slug: {
+                                            contains: requestedSearch,
+                                            mode: "insensitive",
+                                        },
+                                    },
+                                }
+                                : {}),
                     include : {
                         _count: {
                              select: {
@@ -283,6 +294,19 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
                     }
                 },
                 member: {
+                    ...(requestedSearch
+                            ? {
+                                where: {
+                                    room: {
+                                        slug: {
+                                            contains: requestedSearch,
+                                            mode: "insensitive",
+                                        },
+                                    },
+                                },
+                            }
+                            : {}),
+
                     include : {
                         room : {
                             include : {
@@ -309,7 +333,18 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
 
         const totalRooms = await prisma.roomMember.count({
             where : {
-                userId : userId
+                userId : userId,
+                ...(requestedSearch.trim()
+                            ? {
+                                room: {
+                                    slug: {
+                                        contains: requestedSearch.trim(),
+                                        mode: "insensitive",
+                                    },
+                                },
+                            }
+                            : {}
+                    ),
             }
         })
 
@@ -342,6 +377,7 @@ router.get("/user/:userId", authMiddleware, async(req: Request<{userId ?: string
         })
     }
 })
+
 
 router.delete("/:slug", authMiddleware, async(req: Request<{slug ?: string}>, res: Response)=>{
 

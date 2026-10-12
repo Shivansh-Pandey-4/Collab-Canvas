@@ -12,6 +12,7 @@ export default function PageCount({ userInfo }: { userInfo: IUserInfo | null }) 
     const router = useRouter();
 
     const pagination = userInfo?.pagination;
+    console.log("user info inside the pagination", userInfo);
 
     if (!pagination) {
         return null;

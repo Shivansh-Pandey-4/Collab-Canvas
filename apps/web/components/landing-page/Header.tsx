@@ -3,13 +3,12 @@ import Button from "@repo/ui/button";
 import { X, Menu, PenBoxIcon, Sun } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import { authClient } from "../../lib/auth-client";
 
 
 export default function Header() {
 
     const [isOpen, setIsOpen] = useState(false);
-    const { data, isPending } = authClient.useSession();
+
 
     return (
         <header className="max-w-2xl mx-auto mt-4 border border-zinc-700 py-4 rounded-full w-full sticky top-4 bg-black z-50">
@@ -46,15 +45,9 @@ export default function Header() {
                     <Link href="#contact">
                         <li className="cursor-pointer hover:text-gray-300">Contact Me</li>
                     </Link>
-                    {
-                        isPending ? <p className="text-gray-500 font-sm">Checking ...</p> : (
-                            data ? <Link href={"/dashboard"}>
-                                <Button className="hover:text-gray-300 px-3">Dashboard</Button>
-                            </Link> : <Link href={"/signup"}>
-                                <Button className="hover:text-gray-300 px-3">Signup</Button>
-                            </Link>)
-                    }
-
+                    <Link href={"/signup"}>
+                        <Button className="hover:text-gray-300 px-3">Signup</Button>
+                    </Link>
                 </ul>
             </nav>
 
@@ -71,15 +64,9 @@ export default function Header() {
                             <Link href="#contact" onClick={() => setIsOpen(false)}>
                                 <li className="cursor-pointer hover:bg-gray-300 p-2 rounded-md">Contact Me</li>
                             </Link>
-                            {
-                                isPending ? <p className="text-gray-500 font-sm">Checking</p> : (
-                                    data ? <Link href="/dashboard">
-                                        <Button className="w-full mt-1" size="md" variant="secondary">Dashboard</Button>
-                                    </Link> : <Link href="/signup">
-                                        <Button className="w-full mt-1" size="md" variant="secondary">Signup</Button>
-                                    </Link>
-                                )
-                            }
+                            <Link href="/signup">
+                                <Button className="w-full mt-1" size="md" variant="secondary">Get Started</Button>
+                            </Link>
                         </ul>
                     </div>
                 )

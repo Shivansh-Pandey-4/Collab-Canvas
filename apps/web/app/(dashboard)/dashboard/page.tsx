@@ -62,11 +62,11 @@ export type IUserInfo = ({
 })
 
 
-export async function getUserData(userId: string, page = 1, limit = 5) {
+export async function getUserData(userId: string, page = 1, limit = 5, search = "") {
 
     const requestHeaders = await headers();
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/user/${userId}?page=${page}&limit=${limit}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/room/user/${userId}?page=${page}&limit=${limit}&search=${search}`, {
             headers: {
                 cookie: requestHeaders.get("cookie") ?? "",
             },
@@ -85,7 +85,7 @@ export async function getUserData(userId: string, page = 1, limit = 5) {
 }
 
 
-export default async function Dashboard({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+export default async function Dashboard({ searchParams }: { searchParams: Promise<{ page?: string; search?: string; }> }) {
 
 
     const session = await auth.api.getSession({
@@ -99,6 +99,13 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
     const params = await searchParams;
     let page = 1;
+    let search = "";
+
+    if (params.search === undefined) {
+        search = "";
+    } else {
+        search = params.search;
+    }
 
     if (params.page === undefined) {
         page = 1;
@@ -112,7 +119,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         page = parsedPage;
     }
 
-    const userInfo = await getUserData(session.user.id, page, 5);
+    const userInfo = await getUserData(session.user.id, page, 5, search);
 
     if (userInfo === null) {
         return notFound();
