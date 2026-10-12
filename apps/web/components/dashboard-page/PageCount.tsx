@@ -3,34 +3,42 @@
 import Button from "@repo/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { IUserInfo } from "../../app/(dashboard)/dashboard/page";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
 
 
 export default function PageCount({ userInfo }: { userInfo: IUserInfo | null }) {
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
 
     const pagination = userInfo?.pagination;
-    console.log("user info inside the pagination", userInfo);
 
     if (!pagination) {
         return null;
     }
 
+    function navigateToPage(page: number) {
+        const params = new URLSearchParams(searchParams.toString());
+
+        params.set("page", String(page));
+
+        startTransition(() => {
+            router.push(`/dashboard?${params.toString()}`);
+        });
+    }
+
     function nextPage() {
         if (pagination && pagination.currentPage < pagination.totalPage) {
-            router.push(
-                `/dashboard?page=${pagination.currentPage + 1}`
-            );
+            navigateToPage(pagination.currentPage + 1);
         }
     }
 
     function previousPage() {
         if (pagination && pagination.currentPage > 1) {
-            router.push(
-                `/dashboard?page=${pagination.currentPage - 1}`
-            );
+            navigateToPage(pagination.currentPage - 1);
         }
     }
 
@@ -42,16 +50,28 @@ export default function PageCount({ userInfo }: { userInfo: IUserInfo | null }) 
 
                 <Button
                     onClick={previousPage}
-                    disabled={pagination.currentPage <= 1}
-
-                    size="md"> <span className="gap-x-1 flex items-center"><ChevronLeft size={15} /> Prev</span></Button>
+                    disabled={isPending || pagination.currentPage <= 1}
+                    size="md"
+                >
+                    <span className="gap-x-1 flex items-center">
+                        <ChevronLeft size={15} />
+                        {isPending ? "Loading.." : "Prev"}
+                    </span>
+                </Button>
 
                 <Button
                     onClick={nextPage}
                     disabled={
+                        isPending ||
                         pagination.currentPage >= pagination.totalPage
                     }
-                    size="md"> <span className="gap-x-1 flex items-center">Next <ChevronRight size={15} /></span></Button>
+                    size="md"
+                >
+                    <span className="gap-x-1 flex items-center">
+                        {isPending ? "Loading.." : "Next"}
+                        <ChevronRight size={15} />
+                    </span>
+                </Button>
             </div>
         </div>
     )
