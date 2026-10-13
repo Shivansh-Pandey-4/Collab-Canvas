@@ -22,7 +22,8 @@ export default function ToolBar() {
                         const Icon = item.icon;
 
                         return (
-                            <Button onClick={(event) => myToolBar.setSelectedItem(item.label)} value={item.label} key={item.id} variant="toolBar" className={clsx('p-2', myToolBar.selectedItem === item.label && "bg-gray-200 hover:bg-gray-200")}>
+                            <Button
+                                onClick={(event) => myToolBar.setSelectedItem(item.label)} value={item.label} key={item.id} variant="toolBar" className={clsx('p-2', myToolBar.selectedItem === item.label && "bg-gray-200 hover:bg-gray-200")}>
                                 <Icon className="text-gray-700" size={14} />
                             </Button>
                         )

@@ -62,6 +62,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     const [showTyping, setShowTyping] = useState<ITyping | null>(null);
     const timerRef = useRef<NodeJS.Timeout>(null);
     const [activeUserCount, setActiveUserCount] = useState<number | null>(null);
+    const eraserCursorRef = useRef<HTMLDivElement>(null);
 
 
     const myToolBar = useToolBar();
@@ -82,11 +83,14 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     function drawingShapes(ctx: CanvasRenderingContext2D | null, canvas: HTMLCanvasElement | null) {
         if (!ctx) return;
         if (!canvas) return;
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 2;
 
         // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         allData.current.forEach(item => {
             const { shape } = item;
+
 
             if (shape === "square") {
                 ctx.strokeRect(item.x, item.y, item.w, item.h);
@@ -269,6 +273,14 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     }
 
     useEffect(() => {
+        const cursor = eraserCursorRef.current;
+        if (!cursor) return;
+
+        cursor.style.display =
+            myToolBar.selectedItem === "eraser" ? "block" : "none";
+    }, [myToolBar.selectedItem]);
+
+    useEffect(() => {
         selectedTool.current = myToolBar.selectedItem;
     }, [myToolBar.selectedItem]);
 
@@ -330,6 +342,15 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             if (!ctx) return;
             const value = canvas.getBoundingClientRect();
 
+            if (selectedTool.current === "eraser") {
+                const cursor = eraserCursorRef.current;
+
+                if (cursor) {
+                    cursor.style.display = "block";
+                    cursor.style.left = `${e.clientX}px`;
+                    cursor.style.top = `${e.clientY}px`;
+                }
+            }
 
             wsRef.current?.send(JSON.stringify({
                 type: "mouse_movement",
@@ -869,6 +890,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
 
 
 
+
     return (
         <>
 
@@ -883,6 +905,18 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                 />
             }
 
+            <div
+                ref={eraserCursorRef}
+                className="fixed z-[100] pointer-events-none rounded-full border-2 border-black"
+                style={{
+                    left: 0,
+                    top: 0,
+                    width: 20,
+                    height: 20,
+                    transform: "translate(-50%, -50%)",
+                    display: "none",
+                }}
+            />
 
 
             <div className="relative">
@@ -893,6 +927,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     width={1300}
                     className={`bg-white ${myToolBar.selectedItem === "eraser" ? "cursor-none" : ""}`}
                 />
+
 
 
                 {
