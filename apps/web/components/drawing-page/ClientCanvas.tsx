@@ -226,6 +226,44 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                 ctx.stroke();
             }
 
+
+            if (shape === "eraser") {
+                const { points } = item;
+
+                if (!points || points.length < 2) return;
+
+                ctx.save();
+
+                ctx.globalCompositeOperation = "destination-out";
+                ctx.lineWidth = 20;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+
+                ctx.beginPath();
+
+                const firstPoint = points[0];
+
+                if (!firstPoint) {
+                    ctx.restore();
+                    return;
+                }
+
+                ctx.moveTo(firstPoint.x, firstPoint.y);
+
+                for (let i = 1; i < points.length; i++) {
+                    const point = points[i];
+
+                    if (!point) continue;
+
+                    ctx.lineTo(point.x, point.y);
+                }
+
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+
         })
 
     }
@@ -247,7 +285,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             if (data) {
                 try {
                     allData.current = JSON.parse(data);
-                } catch (error) {
+                } catch {
                     allData.current = [];
                 }
             } else {
@@ -275,6 +313,14 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
 
             if (selectedTool.current === "pencil") {
                 allData.current.push({ shape: "pencil", points: [{ x: startX, y: startY }] });
+                currentPencilIndex.current = allData.current.length - 1;
+            }
+            if (selectedTool.current === "eraser") {
+                allData.current.push({
+                    shape: "eraser",
+                    points: [{ x: startX, y: startY }]
+                });
+
                 currentPencilIndex.current = allData.current.length - 1;
             }
         }
@@ -441,15 +487,23 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             }
 
             if (selectedTool.current === "eraser") {
-                const x = initialPoint.current.x;
-                const y = initialPoint.current.y;
+                const x = e.clientX - value.left;
+                const y = e.clientY - value.top;
 
-                const width = e.clientX - value.left;
-                const height = e.clientY - value.top;
+                const index = currentPencilIndex.current;
 
-                ctx.strokeRect(x, y, 20, 20);
-                ctx.fillStyle = "white";
-                ctx.fillRect(x, y, 20, 20);
+                if (index !== null) {
+                    const eraser = allData.current[index];
+
+                    if (eraser?.shape === "eraser") {
+                        eraser.points.push({ x, y });
+                    }
+                }
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawingShapes(ctx, canvas);
+
+                return;
             }
 
             if (selectedTool.current === "right-arrow") {
@@ -633,6 +687,17 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             }
 
             if (selectedTool.current === "eraser") {
+                const index = currentPencilIndex.current;
+
+                if (index !== null) {
+                    const eraser = allData.current[index];
+
+                    if (eraser?.shape === "eraser") {
+                        sendDrawingToSocket(eraser);
+                    }
+                }
+
+                currentPencilIndex.current = null;
             }
 
             if (selectedTool.current === "right-arrow") {
@@ -826,7 +891,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
                     ref={myCanvas}
                     height={600}
                     width={1300}
-                    className="bg-white"
+                    className={`bg-white ${myToolBar.selectedItem === "eraser" ? "cursor-none" : ""}`}
                 />
 
 

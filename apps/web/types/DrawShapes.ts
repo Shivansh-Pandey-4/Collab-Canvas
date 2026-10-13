@@ -65,6 +65,13 @@ type IRightArrow = {
     h : number;
 }
 
+type IEraser = {
+    shape: "eraser";
+    points : {
+        x : number;
+        y : number;
+    }[]
+}
 
 
-export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine | IPencil | IRightArrow;
+export type IDrawShapes = IArrow | ISquare | ICircle | IDiamond | ITriangle | ILine | IPencil | IRightArrow | IEraser;
