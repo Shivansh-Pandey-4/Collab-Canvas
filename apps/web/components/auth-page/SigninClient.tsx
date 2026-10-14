@@ -8,7 +8,7 @@ import { signinSchema } from "../../../../packages/validation/dist/authSchema";
 import { toast } from "sonner";
 import { authClient } from "../../lib/auth-client";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 
 
 export default function SigninClient() {
@@ -17,6 +17,8 @@ export default function SigninClient() {
         email: "",
         password: ""
     });
+
+    const [showEye, setShowEye] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const myError = useRef("");
@@ -94,7 +96,25 @@ export default function SigninClient() {
 
             <div className="flex flex-col gap-y-1">
                 <label htmlFor="password">Password</label>
-                <Input name="password" value={inputData.password} onChange={handleInputChange} required id="password" variant="sm" placeholder="enter password" />
+                <div className="relative">
+                    <Input
+                        type={`${showEye ? "text" : "password"}`}
+                        name="password"
+                        value={inputData.password}
+                        onChange={handleInputChange}
+                        required
+                        id="password"
+                        variant="sm"
+                        placeholder="enter password"
+                        className="w-full pr-10"
+                    />
+                    <div className="hover:cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 py-1.5 px-0.5 rounded-sm" onClick={() => setShowEye(prev => !prev)}>
+                        {
+                            showEye ? <Eye /> : <EyeOff />
+                        }
+                    </div>
+                </div>
+
             </div>
 
             <Button type="submit" size="md" className="text-xl mt-1" variant="secondary">

@@ -37,7 +37,7 @@ export default function FilterClient() {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex items-center space-x-3">
-                <IconInput icon={Search} placeholder="Filter search here..." value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+                <IconInput htmlFor="search" id="search" icon={Search} placeholder="Filter search here..." value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
 
                 <Button
                     size="md"
