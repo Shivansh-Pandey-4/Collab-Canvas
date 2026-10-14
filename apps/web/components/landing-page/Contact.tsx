@@ -3,6 +3,9 @@ import Input from "@repo/ui/input";
 import { SocialContactData } from "../../utils/constant";
 import { RefAttributes } from "react";
 import { IconProps } from "@tabler/icons-react";
+import { Send } from "lucide-react";
+import Button from "@repo/ui/button";
+
 
 interface ISocialContact {
     item: {
@@ -17,13 +20,18 @@ export default function Contact() {
 
     return (
 
-        <div id="contact" className="border-t mt-12 border-gray-700 py-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4 mx-auto scroll-mt-20">
+        <div id="contact" className="border-t mt-12 border-gray-700 py-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4 mx-auto scroll-mt-20 px-1">
 
             <div className=" col-span-1">
                 <h1 className="text-2xl font-semibold">Stay</h1>
                 <h1 className="text-2xl font-semibold">Connected</h1>
                 <p className="text-gray-400 mt-1">Collaborate with me on exciting projects!</p>
-                <Input variant="sm" className="mt-3" type="text" placeholder="Enter your email" />
+                <div className="flex items-center space-x-1">
+                    <Input variant="sm" className="mt-3" type="text" placeholder="Enter your email" />
+                    <Button title="Send Email" size="md" className="mt-3">
+                        <Send />
+                    </Button>
+                </div>
             </div>
 
             <div className=" col-span-1">
