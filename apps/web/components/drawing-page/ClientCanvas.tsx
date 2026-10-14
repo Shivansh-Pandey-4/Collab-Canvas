@@ -46,6 +46,8 @@ export interface ITyping {
     fromUser: string;
 }
 
+export type IWebsocketConnectionType = "error" | "pending" | "successful"
+
 export default function ClientCanvas({ useLocalStorage = true, roomName = "free", userName = "guest" }: IClientCanvasProps) {
 
     const myCanvas = useRef<HTMLCanvasElement>(null);
@@ -63,6 +65,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
     const timerRef = useRef<NodeJS.Timeout>(null);
     const [activeUserCount, setActiveUserCount] = useState<number | null>(null);
     const eraserCursorRef = useRef<HTMLDivElement>(null);
+    const [websocketConnectionType, setWebsocketConnectionType] = useState<IWebsocketConnectionType>("pending");
 
 
     const myToolBar = useToolBar();
@@ -877,7 +880,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
         }
 
         ws.onerror = (event) => {
-            console.log("error: ", event);
+            setWebsocketConnectionType("error");
         }
 
 
@@ -952,7 +955,7 @@ export default function ClientCanvas({ useLocalStorage = true, roomName = "free"
             </div>
 
             {
-                settingWebsocket && <InfoMsg />
+                settingWebsocket && <InfoMsg websocketConnectionType={websocketConnectionType} />
             }
         </>
     )
